@@ -103,16 +103,19 @@ değilsiniz, kendi sorularınızla da oynayabilirsiniz.</p>
   <h2>PUANLAR</h2><ul id="puanlar"></ul>
   <button class="pick ikincil" id="cik" style="margin-top:22px">Odadan çık</button>
 </div>
-<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "kimin-sirri", "tip": "yok", "havuz": [], "sabit": "Anonim bir sır yaz.", "dagit": null, "anonim": true, "ekle": false, "sayisal": false, "grupla": false, "sure": null, "yeniEtiket": "Turu başlat", "tekrarEtiket": "Yeni tur başlat", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Sırrın…"};
+<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "kimin-sirri", "tip": "yok", "havuz": [], "sabit": "Anonim bir sır yaz.", "dagit": null, "anonim": true, "ekle": false, "sayisal": false, "grupla": false, "sure": null, "yeniEtiket": "Turu başlat", "tekrarEtiket": "Yeni tur başlat", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Sırrın…", "oda": true, "yazma": true, "kisiBasi": 1};
 const API = C.api, g = i => document.getElementById(i);
 let kod = null, ben = null, zaman = null, yerel = null, yerelAcik = false, sonDurum = null;
 
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function kar(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(p=>p[1]);}
 
+let sonIx = -1;
 function uret(){
   if(!C.havuz || !C.havuz.length) return {metin: C.sabit || '', cevap: ''};
-  const it = C.havuz[Math.floor(Math.random()*C.havuz.length)];
+  let ix; do { ix = Math.floor(Math.random()*C.havuz.length); } while(C.havuz.length > 1 && ix === sonIx);
+  sonIx = ix;
+  const it = C.havuz[ix];
   if(C.tip === 'cift') return {metin: it[0], cevap: it[1]};
   if(C.tip === 'uclu'){
     const d = kar([0,1,2]);
@@ -173,7 +176,8 @@ function cik(){
   g('yeni').hidden = false; g('yeni').textContent = C.yeniEtiket;
 }
 async function yeniSoru(){
-  if(C.dagit){ await api('/oda/'+kod+'/dagit', {id:ben, gorevler:C.dagit, metin:C.sabit}); tazele(); return; }
+  if(C.dagit){ await api('/oda/'+kod+'/dagit',
+    {id:ben, gorevler:C.dagit, kisiBasi:C.kisiBasi||1, metin:C.sabit}); tazele(); return; }
   const s = uret();
   await api('/oda/'+kod+'/soru', {id:ben, metin:s.metin, cevap:s.cevap, anonim:!!C.anonim, ekle:!!C.ekle});
   g('alan').value = ''; tazele();
@@ -202,14 +206,15 @@ function ciz(d){
 
   g('yeni').hidden = !d.sahip;
   g('yeni').textContent = d.soru ? C.tekrarEtiket : C.yeniEtiket;
+  if(C.dagit) g('serbest').hidden = true;
   g('sureAlan').hidden = !(C.sure && d.soru);
 
-  const yazilabilir = !d.acik;
+  const yazilabilir = !d.acik && C.yazma !== false;
   g('yazma').hidden = !(yazilabilir && !d.yazdim);
   g('bekle').hidden = !(yazilabilir && d.yazdim);
-  g('ac').hidden = !(d.sahip && !d.acik && d.yazan > 0);
-  g('sonuc').hidden = !d.acik;
-  g('yenitur').hidden = !(d.sahip && d.acik);
+  g('ac').hidden = !(C.yazma !== false && d.sahip && !d.acik && d.yazan > 0);
+  g('sonuc').hidden = !(C.yazma !== false && d.acik);
+  g('yenitur').hidden = !(C.yazma !== false && d.sahip && d.acik);
   g('cevapAc').hidden = !(d.sahip && d.acik && !d.dogruAcik && (C.tip==='cift' || C.tip==='uclu' || C.ekle));
 
   if(d.acik){
@@ -264,8 +269,21 @@ function sureBasla(){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  if(C.oda === false){ g('giris').remove(); g('oda').remove(); }
+  if(C.oda === false){
+    g('yeni').hidden = false; g('yeni').textContent = C.yeniEtiket;
+    if(C.havuz && C.havuz.length) g('serbest').hidden = false;
+    g('yeni').onclick = yerelBas;
+    g('kapat').onclick = () => { yerel = null; yerelCiz(); };
+    if(C.sure){ g('sayac').textContent = C.sure;
+      g('sureBtn').onclick = () => { if(sureT){ clearInterval(sureT); sureT=null;
+        g('sureBtn').textContent='Süreyi başlat'; } else sureBasla(); }; }
+    return;
+  }
   g('ad').value = localStorage.getItem('circle_ad') || '';
-  g('yeni').hidden = false; g('yeni').textContent = C.yeniEtiket;
+  g('yeni').hidden = !!C.dagit; g('yeni').textContent = C.yeniEtiket;
+  if(C.dagit){ g('serbest').textContent = 'Görevleri dağıtmak için önce oda kurun.';
+               g('serbest').hidden = false; }
   g('alan').placeholder = C.yazEtiket;
   if(C.havuz && C.havuz.length) g('serbest').hidden = false;
   g('yeni').onclick = () => kod ? yeniSoru() : yerelBas();
