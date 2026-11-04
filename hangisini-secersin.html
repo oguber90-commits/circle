@@ -1,0 +1,43 @@
+<!doctype html><html lang="tr"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111A24">
+<title>Hangisini seçersin · Circle</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#111A24;--cream:#F6F1E4;--acc:#1C8B9C}
+body{background:var(--ink);color:var(--cream);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+     -webkit-font-smoothing:antialiased;padding:28px 20px 72px;max-width:720px;margin:0 auto}
+a{color:inherit}
+.home{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;
+      opacity:.55;text-decoration:none}
+.home:hover{opacity:1}
+.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;
+     color:var(--acc);font-weight:600}
+h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:650;margin-top:10px}
+.lede{margin-top:14px;opacity:.72;max-width:46ch}
+.pick{width:100%;margin-top:26px;padding:16px;border:0;border-radius:14px;background:var(--acc);
+      color:#0B1118;font:inherit;font-weight:650;letter-spacing:.01em;cursor:pointer}
+.pick:active{transform:translateY(1px)}
+#out{display:none;margin-top:16px;padding:20px;border-radius:14px;background:rgba(246,241,228,.07);
+     border:1px solid rgba(246,241,228,.16);font-size:20px;line-height:1.35}
+h2{margin-top:40px;font-size:12px;letter-spacing:.2em;opacity:.5;font-weight:600}
+ul{list-style:none;margin-top:12px}
+li{padding:12px 0;border-bottom:1px solid rgba(246,241,228,.11)}
+li:last-child{border-bottom:0}
+b{font-weight:650;color:#fff}
+.foot{margin-top:56px;padding-top:20px;border-top:1px solid rgba(246,241,228,.12);font-size:12px;
+      letter-spacing:.2em;opacity:.38}
+.grid{margin-top:28px;display:grid;gap:10px}
+.cardlink{display:block;padding:16px 18px;border-radius:13px;text-decoration:none;
+          background:rgba(246,241,228,.055);border:1px solid rgba(246,241,228,.13)}
+.cardlink:hover{background:rgba(246,241,228,.1)}
+.cardlink .t{font-weight:600;font-size:17px}
+.cardlink .s{font-size:12px;letter-spacing:.16em;margin-top:5px;opacity:.55}
+</style>
+<body style="--acc:#1C8B9C"><a class="home" href="index.html">&larr; Circle</a><div class="tag">SOHBET</div><h1>Hangisini seçersin</h1><p class="lede">İki seçenek açılır. Masadaki herkes sırayla birini seçer ve nedenini söyler. Pas geçmek yok.</p><button class="pick" id="btn">Yeni ikilem</button><div id="kutu" style="display:none;margin-top:22px"><div style="padding:24px 20px;border-radius:14px;background:rgba(246,241,228,.07);border:1px solid rgba(246,241,228,.16);font-size:21px;line-height:1.35" id="a"></div><div style="text-align:center;font-size:12px;letter-spacing:.2em;opacity:.45;padding:12px 0">YA DA</div><div style="padding:24px 20px;border-radius:14px;background:rgba(246,241,228,.07);border:1px solid rgba(246,241,228,.16);font-size:21px;line-height:1.35" id="b"></div></div><script>const P=[["Geçmişe bir kez gidebilmek", "Geleceği bir kez görebilmek"], ["Herkesin yalanını anlamak", "Kimsenin senin yalanını anlamaması"], ["Ömür boyu tek bir şarkı dinlemek", "Ömür boyu hiç müzik dinlememek"], ["Bir anda çok zengin olup arkadaşlarını kaybetmek", "Hep bu gelirle kalıp çevreni korumak"], ["Her gece on dakika uçabilmek", "Her gün istediğin yere ışınlanmak ama kimseye söyleyememek"], ["Tüm dillerde konuşabilmek", "Tüm hayvanlarla konuşabilmek"], ["Sonsuza kadar otuz yaşında kalmak", "Her yıl bir yaş gençleşmek"], ["Hiç utanmamak", "Hiç korkmamak"], ["Bir yıl internetsiz yaşamak", "Bir yıl evden hiç çıkmamak"], ["Herkesin seni sevdiği ama kimsenin tanımadığı biri olmak", "Herkesin tanıdığı ama yarısının nefret ettiği biri olmak"], ["Çok yakın beş arkadaş", "Her yerde iki yüz tanıdık"], ["Yaptığın her işte iyi olmak ama hiçbirini sevmemek", "Tek bir işi çok sevip ortalama olmak"], ["Zamanı durdurabilmek", "Zamanı geri alabilmek"], ["Yemeklerin tadını hiç alamamak", "Hiç müzik duyamamak"], ["Düşüncelerinin ekrana yansıması", "Konuştuğun her şeyin kayıt altına alınması"], ["Her sabah bilmediğin bir şehirde uyanmak", "Her sabah tam aynı günü yaşamak"], ["Çocukluğuna dönüp her şeyi hatırlamak", "On yıl ileri gidip hiçbir şey hatırlamamak"], ["Asla yalan söyleyememek", "Asla soru soramamak"], ["Hiç çalışmadan geçinmek ama bir amacın olmaması", "Çok çalışıp sevdiğin bir iş yapmak"], ["Telefonundaki her şeyi ailene göstermek", "Telefonundaki her şeyi iş yerine göstermek"], ["Her gün bir saatini tanımadığın biriyle geçirmek", "Her gün bir saatini tamamen yalnız geçirmek"], ["Uykuya hiç ihtiyaç duymamak", "Yemeğe hiç ihtiyaç duymamak"], ["Hayatının filmi çekilsin, herkes izlesin", "Hiç kimse senin hikâyeni bilmesin"], ["Bir anını sonsuz tekrar yaşamak", "Hiçbir anı hatırlamamak"], ["Dünyanın her yerine gidebilmek ama hiç geri dönememek", "Hiç seyahat edememek ama istediğin herkesi yanına çağırabilmek"], ["Kusursuz hafıza", "Kusursuz sezgi"], ["Herkes senin yaşını bilsin", "Herkes senin maaşını bilsin"], ["Sürekli çok sıcak bir yerde yaşamak", "Sürekli çok soğuk bir yerde yaşamak"], ["İnternette hiç iz bırakmamak", "İnternette her şeyinin bulunabilmesi"], ["Her kavgayı kazanmak ama haklı olmamak", "Hep haklı olmak ama kimseyi ikna edememek"], ["Çok komik olmak", "Çok akıllı olmak"], ["Bir hafta boyunca kimseyle konuşmamak", "Bir hafta boyunca hiç yalnız kalmamak"], ["Sevdiğin işi bırakıp çok para kazanmak", "Aynı işte kalıp yarı para kazanmak"], ["Rüyalarını kontrol edebilmek", "Uyandığında rüyanı hatırlayabilmek"], ["Her yediğin tat sürpriz olsun", "Her yediğinin tadı aynı olsun"], ["Bir insanı affedebilmek", "Bir insan tarafından affedilmek"], ["Hayatının geri kalanında sadece okumak", "Hayatının geri kalanında sadece seyahat etmek"], ["Hiç hastalanmamak", "Hiç yaşlanmamak"], ["Aklından geçeni herkese söylemek zorunda kalmak", "Hiç konuşamamak"], ["Kaybettiğin bir şeyi geri almak", "Hiç sahip olmadığın bir şeyi kazanmak"], ["Bir yıl boyunca her gün yeni bir insanla tanışmak", "Bir yıl boyunca her gün aynı beş kişiyle olmak"], ["Yaptığın her hatayı unutmak", "Yaptığın her iyiliği unutmak"], ["Çok iyi bir dinleyici olmak", "Çok iyi bir anlatıcı olmak"], ["İstediğin her yeteneği bir günlüğüne kazanmak", "Bir yeteneği ömür boyu ortalama seviyede tutmak"], ["Geçmişteki bir kararını değiştirmek", "Gelecekteki bir kararını önceden bilmek"], ["Herkesin seni olduğundan iyi sanması", "Herkesin seni olduğundan kötü sanması"], ["Hayatın boyunca hiç taşınmamak", "Her iki yılda bir şehir değiştirmek"], ["Sessiz ama huzurlu bir hayat", "Gürültülü ama heyecanlı bir hayat"]];
+const d=document;let son=-1;
+d.addEventListener("DOMContentLoaded",()=>{d.getElementById("btn").onclick=()=>{
+ let i;do{i=Math.floor(Math.random()*P.length)}while(i===son);son=i;
+ d.getElementById("a").textContent=P[i][0];d.getElementById("b").textContent=P[i][1];
+ d.getElementById("kutu").style.display="block";};});
+</script>
+<div class="foot">Circle</div></body></html>

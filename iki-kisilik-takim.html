@@ -1,16 +1,16 @@
 <!doctype html><html lang="tr"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111A24">
-<title>İki kişilik takım · Circle</title><style>
+<title>Görev listesi · Circle</title><style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--ink:#111A24;--cream:#F6F1E4;--acc:#1C8B9C}
 body{background:var(--ink);color:var(--cream);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
      -webkit-font-smoothing:antialiased;padding:28px 20px 72px;max-width:720px;margin:0 auto}
 a{color:inherit}
 .home{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;
-      text-transform:uppercase;opacity:.55;text-decoration:none}
+      opacity:.55;text-decoration:none}
 .home:hover{opacity:1}
-.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;
      color:var(--acc);font-weight:600}
 h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:650;margin-top:10px}
 .lede{margin-top:14px;opacity:.72;max-width:46ch}
@@ -19,19 +19,19 @@ h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-we
 .pick:active{transform:translateY(1px)}
 #out{display:none;margin-top:16px;padding:20px;border-radius:14px;background:rgba(246,241,228,.07);
      border:1px solid rgba(246,241,228,.16);font-size:20px;line-height:1.35}
-h2{margin-top:40px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.5;font-weight:600}
+h2{margin-top:40px;font-size:12px;letter-spacing:.2em;opacity:.5;font-weight:600}
 ul{list-style:none;margin-top:12px}
 li{padding:12px 0;border-bottom:1px solid rgba(246,241,228,.11)}
 li:last-child{border-bottom:0}
 b{font-weight:650;color:#fff}
 .foot{margin-top:56px;padding-top:20px;border-top:1px solid rgba(246,241,228,.12);font-size:12px;
-      letter-spacing:.2em;text-transform:uppercase;opacity:.38}
+      letter-spacing:.2em;opacity:.38}
 .grid{margin-top:28px;display:grid;gap:10px}
 .cardlink{display:block;padding:16px 18px;border-radius:13px;text-decoration:none;
           background:rgba(246,241,228,.055);border:1px solid rgba(246,241,228,.13)}
 .cardlink:hover{background:rgba(246,241,228,.1)}
 .cardlink .t{font-weight:600;font-size:17px}
-.cardlink .s{font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-top:5px;opacity:.55}
+.cardlink .s{font-size:12px;letter-spacing:.16em;margin-top:5px;opacity:.55}
 </style>
-<body style="--acc:#6F65C9"><a class="home" href="index.html">&larr; Circle</a><div class="tag">Blöf</div><h1>İki kişilik takım</h1><p class="lede">Her görevi iki kağıda yazın. Aynı görevi alan iki kişi gizli eştir.</p><button class="pick" id="btn">Rastgele seç</button><div id="out"></div><h2>Davranış görevleri</h2><ul><li>Her cümleye “bence” diye başla</li><li>Bardağını hep sağ elinle al</li><li>Konuşurken en az üç kez saatine bak</li><li>Her fırsatta hava durumundan bahset</li><li>Biri güldüğünde sen de hemen gül</li><li>Oturduğun yerde bacak bacak üstüne at</li><li>Cümlelerini hep soruyla bitir</li><li>Her on dakikada bir ayağa kalk</li><li>Birinin söylediği son kelimeyi tekrarla</li><li>Konuşurken elini çenene götür</li><li>Herkese adıyla hitap et</li><li>Bir kez olsun “uzun lafın kısası” de</li><li>Telefonunu hep ters çevir</li><li>Her kalktığında yastığı düzelt</li><li>Bir şey anlatırken sayı ver: “üç sebebi var”</li><li>Yan masadakine bir kez dokunup geç</li></ul><script>const H=["Her cümleye “bence” diye başla", "Bardağını hep sağ elinle al", "Konuşurken en az üç kez saatine bak", "Her fırsatta hava durumundan bahset", "Biri güldüğünde sen de hemen gül", "Oturduğun yerde bacak bacak üstüne at", "Cümlelerini hep soruyla bitir", "Her on dakikada bir ayağa kalk", "Birinin söylediği son kelimeyi tekrarla", "Konuşurken elini çenene götür", "Herkese adıyla hitap et", "Bir kez olsun “uzun lafın kısası” de", "Telefonunu hep ters çevir", "Her kalktığında yastığı düzelt", "Bir şey anlatırken sayı ver: “üç sebebi var”", "Yan masadakine bir kez dokunup geç"];const o=document.getElementById("out");let son=-1;document.getElementById("btn").onclick=()=>{let i;do{i=Math.floor(Math.random()*H.length)}while(H.length>1&&i===son);son=i;o.innerHTML=H[i];o.style.display="block";};</script>
+<body style="--acc:#6F65C9"><a class="home" href="index.html">&larr; Circle</a><div class="tag">BLÖF</div><h1>Görev listesi</h1><p class="lede">Her görevi iki kağıda yazın. Aynı görevi alan iki kişi gizli eştir.</p><button class="pick" id="btn">Rastgele seç</button><div id="out"></div><p class="lede" style="font-size:13px;margin-top:20px">Yazmak için kağıt yerine <a href="yaz.html">cevabını yaz</a> ya da <a href="oda.html">ortak oda</a>.</p><h2>DAVRANIŞ GÖREVLERİ</h2><ul><li>Her cümleye bence diye başla</li><li>Bardağını hep sağ elinle al</li><li>Konuşurken en az üç kez saatine bak</li><li>Her fırsatta hava durumundan bahset</li><li>Biri güldüğünde sen de hemen gül</li><li>Oturduğun yerde bacak bacak üstüne at</li><li>Cümlelerini hep soruyla bitir</li><li>Her on dakikada bir ayağa kalk</li><li>Birinin söylediği son kelimeyi tekrarla</li><li>Konuşurken elini çenene götür</li><li>Herkese adıyla hitap et</li><li>Bir kez olsun uzun lafın kısası de</li><li>Telefonunu hep ters çevir</li><li>Her kalktığında yastığı düzelt</li><li>Bir şey anlatırken sayı ver: üç sebebi var</li><li>Yan masadakine bir kez dokunup geç</li><li>Her içtiğinde bardağı iki eliyle tut</li><li>Konuya girmeden önce bir saniye duraksa</li><li>Birinin cümlesini bitirmeye çalış</li><li>Her onaylamada iki kez başını salla</li><li>Oturmadan önce sandalyeyi hafifçe çek</li><li>Konuşurken bir kez omzuna bak</li><li>Her teşekkürden sonra ne demek de</li><li>Birinin adını iki kez üst üste söyle</li><li>Telefon çaldığında kimse bakmadan sen bak</li><li>Her içeceğinden önce bir yudum su iç</li><li>Birini övdüğünde hemen konuyu değiştir</li><li>Oturduğun yerde iki kez yer değiştir</li></ul><script>const H=["Her cümleye bence diye başla", "Bardağını hep sağ elinle al", "Konuşurken en az üç kez saatine bak", "Her fırsatta hava durumundan bahset", "Biri güldüğünde sen de hemen gül", "Oturduğun yerde bacak bacak üstüne at", "Cümlelerini hep soruyla bitir", "Her on dakikada bir ayağa kalk", "Birinin söylediği son kelimeyi tekrarla", "Konuşurken elini çenene götür", "Herkese adıyla hitap et", "Bir kez olsun uzun lafın kısası de", "Telefonunu hep ters çevir", "Her kalktığında yastığı düzelt", "Bir şey anlatırken sayı ver: üç sebebi var", "Yan masadakine bir kez dokunup geç", "Her içtiğinde bardağı iki eliyle tut", "Konuya girmeden önce bir saniye duraksa", "Birinin cümlesini bitirmeye çalış", "Her onaylamada iki kez başını salla", "Oturmadan önce sandalyeyi hafifçe çek", "Konuşurken bir kez omzuna bak", "Her teşekkürden sonra ne demek de", "Birinin adını iki kez üst üste söyle", "Telefon çaldığında kimse bakmadan sen bak", "Her içeceğinden önce bir yudum su iç", "Birini övdüğünde hemen konuyu değiştir", "Oturduğun yerde iki kez yer değiştir"];const o=document.getElementById("out");let son=-1;document.getElementById("btn").onclick=()=>{let i;do{i=Math.floor(Math.random()*H.length)}while(H.length>1&&i===son);son=i;o.innerHTML=H[i];o.style.display="block";};</script>
 <div class="foot">Circle</div></body></html>

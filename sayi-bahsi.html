@@ -1,0 +1,46 @@
+<!doctype html><html lang="tr"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111A24">
+<title>Sayı bahsi · Circle</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#111A24;--cream:#F6F1E4;--acc:#1C8B9C}
+body{background:var(--ink);color:var(--cream);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+     -webkit-font-smoothing:antialiased;padding:28px 20px 72px;max-width:720px;margin:0 auto}
+a{color:inherit}
+.home{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;
+      opacity:.55;text-decoration:none}
+.home:hover{opacity:1}
+.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;
+     color:var(--acc);font-weight:600}
+h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:650;margin-top:10px}
+.lede{margin-top:14px;opacity:.72;max-width:46ch}
+.pick{width:100%;margin-top:26px;padding:16px;border:0;border-radius:14px;background:var(--acc);
+      color:#0B1118;font:inherit;font-weight:650;letter-spacing:.01em;cursor:pointer}
+.pick:active{transform:translateY(1px)}
+#out{display:none;margin-top:16px;padding:20px;border-radius:14px;background:rgba(246,241,228,.07);
+     border:1px solid rgba(246,241,228,.16);font-size:20px;line-height:1.35}
+h2{margin-top:40px;font-size:12px;letter-spacing:.2em;opacity:.5;font-weight:600}
+ul{list-style:none;margin-top:12px}
+li{padding:12px 0;border-bottom:1px solid rgba(246,241,228,.11)}
+li:last-child{border-bottom:0}
+b{font-weight:650;color:#fff}
+.foot{margin-top:56px;padding-top:20px;border-top:1px solid rgba(246,241,228,.12);font-size:12px;
+      letter-spacing:.2em;opacity:.38}
+.grid{margin-top:28px;display:grid;gap:10px}
+.cardlink{display:block;padding:16px 18px;border-radius:13px;text-decoration:none;
+          background:rgba(246,241,228,.055);border:1px solid rgba(246,241,228,.13)}
+.cardlink:hover{background:rgba(246,241,228,.1)}
+.cardlink .t{font-weight:600;font-size:17px}
+.cardlink .s{font-size:12px;letter-spacing:.16em;margin-top:5px;opacity:.55}
+</style>
+<body style="--acc:#6F65C9"><a class="home" href="index.html">&larr; Circle</a><div class="tag">BLÖF</div><h1>Sayı bahsi</h1><p class="lede">Soruyu açın, herkes bir tahmin yazsın. Tahminler küçükten büyüğe sıralanınca bahisler konur, sonra doğru cevabı açın. Telefonu tutan kişi de oynayabilir.</p><button class="pick" id="btn">Yeni soru</button><div id="out" style="display:block;margin-top:22px;padding:26px 20px;text-align:center"><div id="soru" style="font-size:22px;font-weight:600;line-height:1.3">&nbsp;</div><div id="cvp" style="margin-top:16px;font-size:34px;font-weight:650"></div></div><script>const Q=[["İnsan vücudunda kaç kemik vardır?", "206"], ["Türkiye'de kaç il vardır?", "81"], ["Satranç tahtasında kaç kare vardır?", "64"], ["Bir piyanoda kaç tuş vardır?", "88"], ["Bir yetişkinde kaç diş bulunur?", "32"], ["Türk alfabesinde kaç harf vardır?", "29"], ["Bir iskambil destesinde kaç kart vardır?", "52"], ["Everest kaç metredir?", "8.849"], ["Maraton kaç kilometredir?", "42,195"], ["Ay'a kaç insan ayak bastı?", "12"], ["Rubik küpünün yüzeyinde kaç küçük kare vardır?", "54"], ["Basketbol potası kaç metre yüksektedir?", "3,05"], ["Bir günde kaç saniye vardır?", "86.400"], ["Nil Nehri yaklaşık kaç kilometredir?", "6.650"], ["Birleşmiş Milletler'in kaç üyesi vardır?", "193"], ["Dünya'nın çapı yaklaşık kaç kilometredir?", "12.742"], ["Titanik hangi yıl battı?", "1912"], ["Bir futbol sahasında kaç oyuncu bulunur, iki takım toplam?", "22"], ["İnsan kalbi dakikada ortalama kaç kez atar?", "70"], ["Bir oktavda kaç beyaz tuş vardır?", "7"], ["Ayasofya hangi yüzyılda yapıldı?", "6."], ["Bir zarın karşılıklı yüzlerinin toplamı kaçtır?", "7"], ["Güneş ışığı Dünya'ya kaç dakikada ulaşır?", "8"], ["Bir insanın vücudunun yüzde kaçı sudur?", "60"], ["Olimpiyat bayrağında kaç halka vardır?", "5"], ["Bir asırda kaç on yıl vardır?", "10"], ["Kediler günde ortalama kaç saat uyur?", "15"], ["Bir salyangozun kaç dişi olabilir?", "binlerce"], ["Pi sayısının ilk üç basamağı nedir?", "3,14"], ["Türkiye kaç ülkeyle kara sınırı paylaşır?", "8"]];
+let i=-1,acik=false;const d=document;
+function bas(){
+ if(i<0||acik){i=Math.floor(Math.random()*Q.length);acik=false;
+  d.getElementById("soru").textContent=Q[i][0];d.getElementById("cvp").textContent="";
+  d.getElementById("btn").textContent="Doğru cevabı göster";return;}
+ d.getElementById("cvp").textContent=Q[i][1];acik=true;
+ d.getElementById("btn").textContent="Yeni soru";}
+d.addEventListener("DOMContentLoaded",()=>{d.getElementById("btn").onclick=bas;});
+</script>
+<div class="foot">Circle</div></body></html>

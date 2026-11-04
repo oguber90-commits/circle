@@ -1,16 +1,16 @@
 <!doctype html><html lang="tr"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111A24">
-<title>Kategori yarışı · Circle</title><style>
+<title>Kategori listesi · Circle</title><style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--ink:#111A24;--cream:#F6F1E4;--acc:#1C8B9C}
 body{background:var(--ink);color:var(--cream);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
      -webkit-font-smoothing:antialiased;padding:28px 20px 72px;max-width:720px;margin:0 auto}
 a{color:inherit}
 .home{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;
-      text-transform:uppercase;opacity:.55;text-decoration:none}
+      opacity:.55;text-decoration:none}
 .home:hover{opacity:1}
-.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;
      color:var(--acc);font-weight:600}
 h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:650;margin-top:10px}
 .lede{margin-top:14px;opacity:.72;max-width:46ch}
@@ -19,19 +19,19 @@ h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-we
 .pick:active{transform:translateY(1px)}
 #out{display:none;margin-top:16px;padding:20px;border-radius:14px;background:rgba(246,241,228,.07);
      border:1px solid rgba(246,241,228,.16);font-size:20px;line-height:1.35}
-h2{margin-top:40px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.5;font-weight:600}
+h2{margin-top:40px;font-size:12px;letter-spacing:.2em;opacity:.5;font-weight:600}
 ul{list-style:none;margin-top:12px}
 li{padding:12px 0;border-bottom:1px solid rgba(246,241,228,.11)}
 li:last-child{border-bottom:0}
 b{font-weight:650;color:#fff}
 .foot{margin-top:56px;padding-top:20px;border-top:1px solid rgba(246,241,228,.12);font-size:12px;
-      letter-spacing:.2em;text-transform:uppercase;opacity:.38}
+      letter-spacing:.2em;opacity:.38}
 .grid{margin-top:28px;display:grid;gap:10px}
 .cardlink{display:block;padding:16px 18px;border-radius:13px;text-decoration:none;
           background:rgba(246,241,228,.055);border:1px solid rgba(246,241,228,.13)}
 .cardlink:hover{background:rgba(246,241,228,.1)}
 .cardlink .t{font-weight:600;font-size:17px}
-.cardlink .s{font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-top:5px;opacity:.55}
+.cardlink .s{font-size:12px;letter-spacing:.16em;margin-top:5px;opacity:.55}
 </style>
-<body style="--acc:#E0632F"><a class="home" href="index.html">&larr; Circle</a><div class="tag">Beceri</div><h1>Kategori yarışı</h1><p class="lede">Bir kategori okuyun, süre bir dakika. Başkasında da olan cevaplar çizilir.</p><button class="pick" id="btn">Rastgele seç</button><div id="out"></div><h2>Kategoriler</h2><ul><li>Beyaz eşya markaları</li><li>Sinemada geçen filmler</li><li>Bir şeyin içine konulan şeyler</li><li>Türkiye'de il isimleri</li><li>Sütlü tatlılar</li><li>Kedi isimleri</li><li>Takım adları</li><li>Mutfakta bulunan metal şeyler</li><li>Çocuk oyunları</li><li>İçinde “k” geçen meyveler</li><li>Ayakkabı türleri</li><li>Bir evde kesinlikle bulunan şeyler</li><li>Dizi karakterleri</li><li>Yol kenarında görülen şeyler</li><li>Sabah yapılan şeyler</li><li>Soğuk içecekler</li><li>Okul malzemeleri</li><li>Hayvan sesleri</li><li>Bagajda taşınan şeyler</li><li>Tatil yerleri</li><li>Ünlü çiftler</li><li>Acı veren şeyler</li><li>Ücretsiz olan şeyler</li><li>Geç kalma bahaneleri</li></ul><script>const H=["Beyaz eşya markaları", "Sinemada geçen filmler", "Bir şeyin içine konulan şeyler", "Türkiye"de il isimleri", "Sütlü tatlılar", "Kedi isimleri", "Takım adları", "Mutfakta bulunan metal şeyler", "Çocuk oyunları", "İçinde “k” geçen meyveler", "Ayakkabı türleri", "Bir evde kesinlikle bulunan şeyler", "Dizi karakterleri", "Yol kenarında görülen şeyler", "Sabah yapılan şeyler", "Soğuk içecekler", "Okul malzemeleri", "Hayvan sesleri", "Bagajda taşınan şeyler", "Tatil yerleri", "Ünlü çiftler", "Acı veren şeyler", "Ücretsiz olan şeyler", "Geç kalma bahaneleri"];const o=document.getElementById("out");let son=-1;document.getElementById("btn").onclick=()=>{let i;do{i=Math.floor(Math.random()*H.length)}while(H.length>1&&i===son);son=i;o.innerHTML=H[i];o.style.display="block";};</script>
+<body style="--acc:#E0632F"><a class="home" href="index.html">&larr; Circle</a><div class="tag">BECERİ</div><h1>Kategori listesi</h1><p class="lede">Bir kategori okuyun, süre bir dakika. En çok yazan kazanır.</p><button class="pick" id="btn">Rastgele seç</button><div id="out"></div><p class="lede" style="font-size:13px;margin-top:20px">Yazmak için kağıt yerine <a href="yaz.html">cevabını yaz</a> ya da <a href="oda.html">ortak oda</a>.</p><h2>KATEGORİLER</h2><ul><li>Beyaz eşya markaları</li><li>Sinemada izlediğin filmler</li><li>Bir şeyin içine konulan şeyler</li><li>Türkiye'de il isimleri</li><li>Sütlü tatlılar</li><li>Kedi isimleri</li><li>Takım adları</li><li>Mutfakta bulunan metal şeyler</li><li>Çocuk oyunları</li><li>İçinde k geçen meyveler</li><li>Ayakkabı türleri</li><li>Bir evde kesinlikle bulunan şeyler</li><li>Dizi karakterleri</li><li>Yol kenarında görülen şeyler</li><li>Sabah yapılan şeyler</li><li>Soğuk içecekler</li><li>Okul malzemeleri</li><li>Hayvan sesleri</li><li>Bagajda taşınan şeyler</li><li>Tatil yerleri</li><li>Ünlü çiftler</li><li>Acı veren şeyler</li><li>Ücretsiz olan şeyler</li><li>Geç kalma bahaneleri</li><li>Cebe sığan şeyler</li><li>Islanınca bozulan şeyler</li><li>Pille çalışan şeyler</li><li>Kokusundan tanınan şeyler</li><li>Katlanabilen şeyler</li><li>Gece açık olan yerler</li></ul><script>const H=["Beyaz eşya markaları", "Sinemada izlediğin filmler", "Bir şeyin içine konulan şeyler", "Türkiye'de il isimleri", "Sütlü tatlılar", "Kedi isimleri", "Takım adları", "Mutfakta bulunan metal şeyler", "Çocuk oyunları", "İçinde k geçen meyveler", "Ayakkabı türleri", "Bir evde kesinlikle bulunan şeyler", "Dizi karakterleri", "Yol kenarında görülen şeyler", "Sabah yapılan şeyler", "Soğuk içecekler", "Okul malzemeleri", "Hayvan sesleri", "Bagajda taşınan şeyler", "Tatil yerleri", "Ünlü çiftler", "Acı veren şeyler", "Ücretsiz olan şeyler", "Geç kalma bahaneleri", "Cebe sığan şeyler", "Islanınca bozulan şeyler", "Pille çalışan şeyler", "Kokusundan tanınan şeyler", "Katlanabilen şeyler", "Gece açık olan yerler"];const o=document.getElementById("out");let son=-1;document.getElementById("btn").onclick=()=>{let i;do{i=Math.floor(Math.random()*H.length)}while(H.length>1&&i===son);son=i;o.innerHTML=H[i];o.style.display="block";};</script>
 <div class="foot">Circle</div></body></html>

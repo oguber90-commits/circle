@@ -1,16 +1,16 @@
 <!doctype html><html lang="tr"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111A24">
-<title>Sözlük uydurma · Circle</title><style>
+<title>Anlam uydurma · Circle</title><style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--ink:#111A24;--cream:#F6F1E4;--acc:#1C8B9C}
 body{background:var(--ink);color:var(--cream);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
      -webkit-font-smoothing:antialiased;padding:28px 20px 72px;max-width:720px;margin:0 auto}
 a{color:inherit}
 .home{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;
-      text-transform:uppercase;opacity:.55;text-decoration:none}
+      opacity:.55;text-decoration:none}
 .home:hover{opacity:1}
-.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;
      color:var(--acc);font-weight:600}
 h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:650;margin-top:10px}
 .lede{margin-top:14px;opacity:.72;max-width:46ch}
@@ -19,19 +19,29 @@ h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-we
 .pick:active{transform:translateY(1px)}
 #out{display:none;margin-top:16px;padding:20px;border-radius:14px;background:rgba(246,241,228,.07);
      border:1px solid rgba(246,241,228,.16);font-size:20px;line-height:1.35}
-h2{margin-top:40px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.5;font-weight:600}
+h2{margin-top:40px;font-size:12px;letter-spacing:.2em;opacity:.5;font-weight:600}
 ul{list-style:none;margin-top:12px}
 li{padding:12px 0;border-bottom:1px solid rgba(246,241,228,.11)}
 li:last-child{border-bottom:0}
 b{font-weight:650;color:#fff}
 .foot{margin-top:56px;padding-top:20px;border-top:1px solid rgba(246,241,228,.12);font-size:12px;
-      letter-spacing:.2em;text-transform:uppercase;opacity:.38}
+      letter-spacing:.2em;opacity:.38}
 .grid{margin-top:28px;display:grid;gap:10px}
 .cardlink{display:block;padding:16px 18px;border-radius:13px;text-decoration:none;
           background:rgba(246,241,228,.055);border:1px solid rgba(246,241,228,.13)}
 .cardlink:hover{background:rgba(246,241,228,.1)}
 .cardlink .t{font-weight:600;font-size:17px}
-.cardlink .s{font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-top:5px;opacity:.55}
+.cardlink .s{font-size:12px;letter-spacing:.16em;margin-top:5px;opacity:.55}
 </style>
-<body style="--acc:#6F65C9"><a class="home" href="index.html">&larr; Circle</a><div class="tag">Blöf</div><h1>Sözlük uydurma</h1><p class="lede">Kelimeyi okuyun, gerçek tanımı saklayın. Herkes bir tanım uydurup yazsın.</p><button class="pick" id="btn">Rastgele seç</button><div id="out"></div><h2>Kelime ve gerçek anlamı</h2><ul><li><b>Lâl</b>: Dili tutulmuş, konuşamaz hale gelmiş</li><li><b>Kavi</b>: Sağlam, güçlü</li><li><b>Şebnem</b>: Çiy, sabah nemi</li><li><b>Bedbaht</b>: Talihsiz, mutsuz</li><li><b>Mihnet</b>: Zahmet, sıkıntı</li><li><b>Yeis</b>: Umutsuzluk</li><li><b>Dirayet</b>: Kavrayış, yönetme yeteneği</li><li><b>Hercai</b>: Kararsız, bir yerde durmayan</li><li><b>Münzevi</b>: Toplumdan uzak yaşayan</li><li><b>Sehven</b>: Yanlışlıkla, dalgınlıkla</li><li><b>Ketum</b>: Sır tutan, ağzı sıkı</li><li><b>Zebun</b>: Güçsüz, düşkün</li><li><b>Payidar</b>: Sürekli, kalıcı</li><li><b>Müstehzi</b>: Alaycı</li><li><b>Vehim</b>: Kuruntu, asılsız korku</li><li><b>Lakayt</b>: Kayıtsız, ilgisiz</li></ul><script>const H=["<b>Lâl</b>: Dili tutulmuş, konuşamaz hale gelmiş", "<b>Kavi</b>: Sağlam, güçlü", "<b>Şebnem</b>: Çiy, sabah nemi", "<b>Bedbaht</b>: Talihsiz, mutsuz", "<b>Mihnet</b>: Zahmet, sıkıntı", "<b>Yeis</b>: Umutsuzluk", "<b>Dirayet</b>: Kavrayış, yönetme yeteneği", "<b>Hercai</b>: Kararsız, bir yerde durmayan", "<b>Münzevi</b>: Toplumdan uzak yaşayan", "<b>Sehven</b>: Yanlışlıkla, dalgınlıkla", "<b>Ketum</b>: Sır tutan, ağzı sıkı", "<b>Zebun</b>: Güçsüz, düşkün", "<b>Payidar</b>: Sürekli, kalıcı", "<b>Müstehzi</b>: Alaycı", "<b>Vehim</b>: Kuruntu, asılsız korku", "<b>Lakayt</b>: Kayıtsız, ilgisiz"];const o=document.getElementById("out");let son=-1;document.getElementById("btn").onclick=()=>{let i;do{i=Math.floor(Math.random()*H.length)}while(H.length>1&&i===son);son=i;o.innerHTML=H[i];o.style.display="block";};</script>
+<body style="--acc:#6F65C9"><a class="home" href="index.html">&larr; Circle</a><div class="tag">BLÖF</div><h1>Anlam uydurma</h1><p class="lede">Kelime açılır, herkes bir tanım uydurur. Hepsi okunduktan sonra gerçek anlamı açın. Telefonu tutan kişi de oynayabilir.</p><button class="pick" id="btn">Yeni kelime</button><p class="lede" style="font-size:13px;margin-top:18px">Tanımları yazmak için <a href="yaz.html">cevabını yaz</a> ya da <a href="oda.html">ortak oda</a>.</p><div id="out" style="display:block;margin-top:22px;padding:24px 20px;text-align:center"><div id="kelime" style="font-size:30px;font-weight:650;line-height:1.2">&nbsp;</div><div id="anlam" style="margin-top:14px;font-size:17px;opacity:.85"></div></div><script>const K=[["Fisebilillah", "Karşılık beklemeden, hiçbir çıkar gözetmeden"], ["Müsellem", "Herkesçe kabul edilmiş, tartışmasız"], ["Münhasıran", "Yalnızca ona özgü olarak"], ["Mütehassis", "Duygulanmış, içi titremiş"], ["Teşerrüf", "Tanışmaktan şeref duyma"], ["İstihza", "İnce alay"], ["Mefruşat", "Ev döşemelik eşyaları"], ["Bedahet", "Apaçıklık, ispat gerektirmeme"], ["Tevatür", "Ağızdan ağıza yayılan, kaynağı belirsiz haber"], ["Muhteriz", "Çekingen, ürkek"], ["İnfial", "İçerleme, gücenip öfkelenme"], ["Muvazaa", "Danışıklı dövüş, anlaşmalı sahtelik"], ["Tenezzül", "Alçalarak kabul etme"], ["Evla", "Daha uygun, daha yerinde"], ["Vukuf", "Bir konuyu derinden bilme"], ["İtidal", "Ölçülülük, soğukkanlılık"], ["Münferit", "Tek başına olan, ayrı düşen"], ["Mebzul", "Bol bol, fazlasıyla"], ["Müstağni", "Kimseye ihtiyaç duymayan, gönlü tok"], ["İhtilat", "Karışma, araya girme"], ["Nekahet", "Hastalık sonrası iyileşme dönemi"], ["Tebcil", "Yüceltme, ululama"], ["Mütekabil", "Karşılıklı"], ["Zelil", "Aşağılanmış, hor görülmüş"], ["Tenakuz", "Kendi içinde çelişme"], ["Muhteviyat", "Bir şeyin içindekiler"], ["Tahassüs", "İnce duygulanma"], ["Müphem", "Belirsiz, bulanık"], ["İnhisar", "Tekel, tek elde toplanma"], ["Tegafül", "Bilmezden gelme"], ["Vehametli", "Sonu tehlikeli, ağır"], ["Şayan", "Yakışır, layık"], ["Terakki", "İlerleme, yükselme"], ["İzmihlal", "Çöküş, dağılma"], ["Muvaffakiyet", "Başarı"], ["Mütemadiyen", "Aralıksız, sürekli"], ["Müteferrik", "Dağınık, ayrı ayrı"], ["Mahzur", "Sakınca"], ["Münakaşa", "Söz dalaşı"], ["Şedit", "Sert, şiddetli"], ["Ariyet", "Geri verilmek üzere alınan şey"], ["Bais", "Sebep olan, yol açan"], ["Cebren", "Zorla"], ["Dirayetsiz", "Beceriksiz, kavrayışsız"], ["Encam", "Son, akıbet"], ["Fevkalbeşer", "İnsanüstü"], ["Girizgah", "Söze giriş, hazırlık cümlesi"], ["Hercümerç", "Alt üst, darmadağın"], ["İcbar", "Zorlama"], ["Kesafet", "Yoğunluk, koyuluk"], ["Lehülhamd", "Şükürler olsun"], ["Mağfiret", "Bağışlanma"], ["Nazire", "Benzerini yapma, karşılık verme"], ["Payimal", "Ayaklar altında kalmış, çiğnenmiş"], ["Rüçhan", "Öncelik, üstünlük"], ["Sarahat", "Açıklık, netlik"], ["Şiar", "Belirgin iz, ayırt edici nitelik"], ["Tahattur", "Hatırlama"], ["Uhde", "Sorumluluk, yükümlülük"], ["Vareste", "Kurtulmuş, uzak kalmış"]];
+let i=-1,acik=false;const d=document;
+function bas(){
+ if(i<0||acik){i=Math.floor(Math.random()*K.length);acik=false;
+  d.getElementById("kelime").textContent=K[i][0];
+  d.getElementById("anlam").textContent="";
+  d.getElementById("btn").textContent="Gerçek anlamı göster";return;}
+ d.getElementById("anlam").textContent=K[i][1];acik=true;
+ d.getElementById("btn").textContent="Yeni kelime";}
+d.addEventListener("DOMContentLoaded",()=>{d.getElementById("btn").onclick=bas;});
+</script>
 <div class="foot">Circle</div></body></html>

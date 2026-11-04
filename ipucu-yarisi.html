@@ -1,0 +1,51 @@
+<!doctype html><html lang="tr"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111A24">
+<title>İpucu yarışı · Circle</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#111A24;--cream:#F6F1E4;--acc:#1C8B9C}
+body{background:var(--ink);color:var(--cream);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+     -webkit-font-smoothing:antialiased;padding:28px 20px 72px;max-width:720px;margin:0 auto}
+a{color:inherit}
+.home{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;
+      opacity:.55;text-decoration:none}
+.home:hover{opacity:1}
+.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;
+     color:var(--acc);font-weight:600}
+h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:650;margin-top:10px}
+.lede{margin-top:14px;opacity:.72;max-width:46ch}
+.pick{width:100%;margin-top:26px;padding:16px;border:0;border-radius:14px;background:var(--acc);
+      color:#0B1118;font:inherit;font-weight:650;letter-spacing:.01em;cursor:pointer}
+.pick:active{transform:translateY(1px)}
+#out{display:none;margin-top:16px;padding:20px;border-radius:14px;background:rgba(246,241,228,.07);
+     border:1px solid rgba(246,241,228,.16);font-size:20px;line-height:1.35}
+h2{margin-top:40px;font-size:12px;letter-spacing:.2em;opacity:.5;font-weight:600}
+ul{list-style:none;margin-top:12px}
+li{padding:12px 0;border-bottom:1px solid rgba(246,241,228,.11)}
+li:last-child{border-bottom:0}
+b{font-weight:650;color:#fff}
+.foot{margin-top:56px;padding-top:20px;border-top:1px solid rgba(246,241,228,.12);font-size:12px;
+      letter-spacing:.2em;opacity:.38}
+.grid{margin-top:28px;display:grid;gap:10px}
+.cardlink{display:block;padding:16px 18px;border-radius:13px;text-decoration:none;
+          background:rgba(246,241,228,.055);border:1px solid rgba(246,241,228,.13)}
+.cardlink:hover{background:rgba(246,241,228,.1)}
+.cardlink .t{font-weight:600;font-size:17px}
+.cardlink .s{font-size:12px;letter-spacing:.16em;margin-top:5px;opacity:.55}
+</style>
+<body style="--acc:#E0632F"><a class="home" href="index.html">&larr; Circle</a><div class="tag">BECERİ</div><h1>İpucu yarışı</h1><p class="lede">İpuçları birer birer açılır ve gittikçe kolaylaşır. İlk bilen o ipucunun puanını alır. Cevap en sonda görünür, telefonu tutan kişi de oynayabilir.</p><button class="pick" id="btn">İlk ipucunu göster</button><ul id="liste" style="margin-top:22px"></ul><div id="cevap" style="margin-top:22px;font-size:22px"></div><script>const I=[["Eyfel Kulesi", ["Yapıldığında geçici olması planlanmıştı.", "Sıcakta birkaç santim uzar.", "Demirden yapılmıştır.", "Bir dünya fuarı için dikildi.", "Paris'tedir."]], ["Penguen", ["Kanatları var ama uçamaz.", "Tek eşli olabilir.", "Yumurtayı ayaklarının üstünde taşır.", "Soğukta sürü halinde ısınır.", "Siyah beyazdır ve kutuplarda yaşar."]], ["Kahve", ["Başlangıçta meyve olarak yenirdi.", "Dünyada en çok işlem gören tarım ürünlerinden.", "Bir Etiyopya efsanesiyle anılır.", "Kavrulur, öğütülür.", "Sabahları içilir ve uyku kaçırır."]], ["Ahtapot", ["Üç kalbi vardır.", "Rengini saniyeler içinde değiştirir.", "Kavanozun kapağını açabilir.", "Tehlikede mürekkep salar.", "Sekiz kolu vardır."]], ["Satranç", ["Altmış dört kare.", "Hindistan kökenli olduğu düşünülür.", "Bir taş sadece L şeklinde gider.", "Şah mat ile biter.", "Siyah ve beyaz taşlarla oynanır."]], ["Ay", ["Her yıl Dünya'dan birkaç santim uzaklaşır.", "Yüzeyinde atmosfer yoktur.", "Gelgitlerin sebebidir.", "1969'da üstüne ilk kez ayak basıldı.", "Geceleri gökyüzünde görünür."]], ["Bal", ["Doğru saklanırsa bozulmaz.", "Mezarlarda bulunduğu söylenir.", "Yapımı için binlerce kilometre uçulur.", "Peteklerde biriktirilir.", "Arılar yapar."]], ["Piramit", ["Yapımı hakkında hâlâ tartışma var.", "Taşları tonlarca ağırlıkta.", "Mezar olarak kullanıldı.", "Çölün kenarındadır.", "Mısır'dadır ve üçgen yüzleri vardır."]], ["Buzdolabı", ["İlk versiyonları zehirli gazla çalışıyordu.", "Mutfağın en çok açılan kapısı.", "Üstüne magnet takılır.", "İçinde ampul vardır.", "Yiyecekleri soğuk tutar."]], ["Zürafa", ["Boynunda insanla aynı sayıda omur vardır.", "Günde çok az uyur.", "Dili mavimsidir.", "Yavrusu iki metreden düşerek doğar.", "Dünyanın en uzun hayvanıdır."]], ["Saat", ["İlk biçimleri suyla çalışıyordu.", "Yönü bir gelenekten gelir.", "Kolda, duvarda, cepte bulunur.", "İki ya da üç ibresi vardır.", "Zamanı gösterir."]], ["Kitap", ["Bir zamanlar elle çoğaltılırdı.", "Matbaa her şeyi değiştirdi.", "Sayfaları numaralıdır.", "Kütüphanede bulunur.", "Okunur ve kapağı vardır."]]];
+let set=null,sira=0,bitti=false;const d=document;
+function yeniSet(){set=I[Math.floor(Math.random()*I.length)];sira=0;bitti=false;
+ d.getElementById("liste").innerHTML="";d.getElementById("cevap").innerHTML="";}
+function ilerle(){
+ if(set===null||bitti){yeniSet();}
+ const n=set[1].length;
+ if(sira<n){const puan=n-sira;sira++;
+  d.getElementById("liste").insertAdjacentHTML("beforeend",
+   "<li><b>"+puan+" puan</b> &nbsp; "+set[1][sira-1]+"</li>");
+  d.getElementById("btn").textContent=sira<n?"Sonraki ipucu":"Cevabı göster";return;}
+ d.getElementById("cevap").innerHTML="Cevap: <b>"+set[0]+"</b>";bitti=true;
+ d.getElementById("btn").textContent="Yeni tur";}
+d.addEventListener("DOMContentLoaded",()=>{d.getElementById("btn").onclick=ilerle;});
+</script>
+<div class="foot">Circle</div></body></html>
