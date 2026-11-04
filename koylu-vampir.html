@@ -258,8 +258,8 @@ function ciz(d){
   g('soruSar').hidden = !d.soru;
   if(d.soru) g('soruMetin').textContent = d.soru;
   g('kapat').hidden = !d.sahip;
-  g('gizliKutu').hidden = !d.gizli;
-  if(d.gizli){
+  g('gizliKutu').hidden = !d.gizli || !!C.izgara;
+  if(d.gizli && !C.izgara){
     if(C.degistir){
       g('gizliMetin').hidden = true;
       g('gizliSatir').innerHTML = d.gizli.split('\n').map((x,i) =>
