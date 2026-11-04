@@ -85,7 +85,7 @@ değilsiniz, kendi sorularınızla da oynayabilirsiniz.</p>
 <div id="oda" hidden>
   <div class="bar"><span>ODA <b id="kodgoster"></b></span><span id="durum"></span></div>
   <div id="gizliKutu" class="kutu" hidden style="border-color:rgba(246,241,228,.4)">
-    <div class="cn">SENİN GÖREVLERİN, KİMSEYE GÖSTERME</div>
+    <div class="cn" id="gizliBaslik">SENİN GÖREVLERİN, KİMSEYE GÖSTERME</div>
     <div class="soru" id="gizliMetin" style="padding-right:0"></div></div>
   <div id="yazma">
     <textarea id="alan" rows="3" style="margin-top:14px"></textarea>
@@ -103,7 +103,7 @@ değilsiniz, kendi sorularınızla da oynayabilirsiniz.</p>
   <h2>PUANLAR</h2><ul id="puanlar"></ul>
   <button class="pick ikincil" id="cik" style="margin-top:22px">Odadan çık</button>
 </div>
-<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "kimin-sirri", "tip": "yok", "havuz": [], "sabit": "Anonim bir sır yaz.", "dagit": null, "anonim": true, "ekle": false, "sayisal": false, "grupla": false, "sure": null, "yeniEtiket": "Turu başlat", "tekrarEtiket": "Yeni tur başlat", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Sırrın…", "oda": true, "yazma": true, "kisiBasi": 1};
+<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "kimin-sirri", "tip": "yok", "havuz": [], "sabit": "Anonim bir sır yaz.", "dagit": null, "anonim": true, "ekle": false, "sayisal": false, "grupla": false, "sure": null, "yeniEtiket": "Turu başlat", "tekrarEtiket": "Yeni tur başlat", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Sırrın…", "oda": true, "yazma": true, "kisiBasi": 1, "yabanci": false, "gizliBaslik": null, "dagitUyari": null};
 const API = C.api, g = i => document.getElementById(i);
 let kod = null, ben = null, zaman = null, yerel = null, yerelAcik = false, sonDurum = null;
 
@@ -184,6 +184,11 @@ function cik(){
   g('yeni').hidden = false; g('yeni').textContent = C.yeniEtiket;
 }
 async function yeniSoru(){
+  if(C.yabanci){
+    const y = uret();
+    await api('/oda/'+kod+'/dagit', {id:ben, gorevler:[y.metin], mod:'yabanci',
+      tekMetin:'SEN YABANCISIN. Yeri bilmiyorsun, yakalanmadan anlamaya çalış.', metin:C.sabit});
+    tazele(); return; }
   if(C.dagit){ await api('/oda/'+kod+'/dagit',
     {id:ben, gorevler:C.dagit, kisiBasi:C.kisiBasi||1, metin:C.sabit}); tazele(); return; }
   const s = uret();
@@ -214,7 +219,7 @@ function ciz(d){
 
   g('yeni').hidden = !d.sahip;
   g('yeni').textContent = d.soru ? C.tekrarEtiket : C.yeniEtiket;
-  if(C.dagit) g('serbest').hidden = true;
+  if(C.dagit || C.yabanci) g('serbest').hidden = true;
   g('sureAlan').hidden = !(C.sure && d.soru);
 
   const yazilabilir = !d.acik && C.yazma !== false;
@@ -289,10 +294,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   g('ad').value = localStorage.getItem('circle_ad') || '';
-  g('yeni').hidden = !!C.dagit; g('yeni').textContent = C.yeniEtiket;
-  if(C.dagit){ g('serbest').textContent = 'Görevleri dağıtmak için önce oda kurun.';
-               g('serbest').hidden = false; }
+  const dagitimli = !!C.dagit || !!C.yabanci;
+  g('yeni').hidden = dagitimli; g('yeni').textContent = C.yeniEtiket;
+  if(dagitimli){ g('serbest').textContent = C.dagitUyari || 'Dağıtmak için önce oda kurun.';
+                 g('serbest').hidden = false; }
   g('alan').placeholder = C.yazEtiket;
+  if(C.gizliBaslik) g('gizliBaslik').textContent = C.gizliBaslik;
   if(C.havuz && C.havuz.length) g('serbest').hidden = false;
   g('yeni').onclick = () => kod ? yeniSoru() : yerelBas();
   g('kapat').onclick = async () => { if(kod){ await api('/oda/'+kod+'/kapat', {id:ben}); tazele(); }

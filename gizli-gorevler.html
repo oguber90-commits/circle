@@ -85,7 +85,7 @@ değilsiniz, kendi sorularınızla da oynayabilirsiniz.</p>
 <div id="oda" hidden>
   <div class="bar"><span>ODA <b id="kodgoster"></b></span><span id="durum"></span></div>
   <div id="gizliKutu" class="kutu" hidden style="border-color:rgba(246,241,228,.4)">
-    <div class="cn">SENİN GÖREVLERİN, KİMSEYE GÖSTERME</div>
+    <div class="cn" id="gizliBaslik">SENİN GÖREVLERİN, KİMSEYE GÖSTERME</div>
     <div class="soru" id="gizliMetin" style="padding-right:0"></div></div>
   <div id="yazma">
     <textarea id="alan" rows="3" style="margin-top:14px"></textarea>
@@ -103,7 +103,7 @@ değilsiniz, kendi sorularınızla da oynayabilirsiniz.</p>
   <h2>PUANLAR</h2><ul id="puanlar"></ul>
   <button class="pick ikincil" id="cik" style="margin-top:22px">Odadan çık</button>
 </div>
-<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "gizli-gorevler", "tip": "yok", "havuz": [], "sabit": "Görevler dağıtıldı. Herkes kendi telefonuna baksın.", "dagit": ["Birine kendi telefon numarasını ezberden söylet", "Birini iki dakika boyunca tek bir konuda konuştur", "Grubun tamamını aynı anda susturacak bir cümle kur", "Birine kendi kıyafetini övdür", "Birini yer değiştirmeye ikna et", "Birine çocukluk anısı anlattır", "Birine senin için su getirt", "Birini bir şarkının sözünü hatırlamaya zorla", "Konuyu hiç alakasız bir yere getir ve kimse fark etmesin", "Birine aynı cümleyi iki kez söylet", "Birini telefonundan bir şey aratmaya ikna et", "Birine senden bir şey ödünç istet", "Üç kişiyi aynı anda güldür", "Birine ayakkabısını çıkarttır", "Birini bir bahisle ikna et", "Birine gelecek hafta için plan yaptır", "Birine en sevdiği filmi anlattır", "Birine kendi yaşını yüksek sesle söylet", "Birini masadan kaldırıp geri oturt", "Birine telefonunu sana uzattır", "Birine bir şeyi saymasını yaptır", "Birine bir ünlünün adını söylet", "Masadaki birini taklit et ve kimse fark etmesin", "Birine senin adını yüksek sesle söylet", "Birini bir fotoğraf çekmeye ikna et", "Birine bir yemek tarifi anlattır", "Birini pencereye ya da kapıya baktır", "Birine saatine bakmasını yaptır", "Birini bir şeyi tekrar açıklamak zorunda bırak", "Birine bir hayvan sesi çıkarttır", "Birine bir şeyin fiyatını tahmin ettir", "Birini kendi söylediği bir şeyden vazgeçirt", "Birine en son nereye gittiğini anlattır", "Birini iki şey arasında seçim yapmaya zorla", "Birine bir espri yaptır", "Birine bir müzik açtır", "Birini sana hak verdir", "Birine masadaki bir şeyi uzattır", "Birine ismini yanlış söyle ve düzelttir", "Birine bir şeyi koklattır", "Birini bir anlığına ayağa kaldır", "Birine en sevdiği rengi söylet", "Birine bir soruyu soruyla cevaplattır", "Birine bir şeyi tarif etmek için elini kullandır", "Birini bir konuda fikrini değiştirmeye ikna et", "Birine bir sır verdir", "Birine kaç saat uyuduğunu söylet", "Birini masadaki başka birine soru sormaya yönlendir", "Birine bir şeyi beğendiğini söylet", "Birine geçen hafta ne yaptığını anlattır", "Birini bir kelimeyi hecelemeye zorla", "Birine fısıltıyla konuşturt", "Birini güldürüp sonra ciddileştir", "Birine seninle aynı şeyi söylet", "Birini bir şeyi tekrar denemeye ikna et", "Birine bir yer adı söylet", "Birine kendisiyle ilgili bir itiraf yaptır", "Birini kısa bir süre sessiz kalmaya ikna et", "Birine telefonunun şarjını söylet", "Birine bir rakam söylet", "Birine seni bir konuda düzelttir", "Birine masadan bir şey aldır", "Birini bir şeyi göstermek için telefonunu açtır", "Birine bir alışkanlığını anlattır", "Birini aynı soruyu iki kişiye sormaya yönlendir", "Birine bir yemeği sevmediğini söylet", "Birini bir dakika boyunca sana baktır", "Birine geçmişten bir pişmanlık anlattır", "Birini bir konuda abartmaya ikna et", "Birine bir hayalini anlattır", "Birine bir markanın adını söylet", "Birini bir şeyi tekrar okumaya zorla"], "anonim": false, "ekle": false, "sayisal": false, "grupla": false, "sure": null, "yeniEtiket": "Görevleri dağıt", "tekrarEtiket": "Yeniden dağıt", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Cevabın…", "oda": true, "yazma": false, "kisiBasi": 2};
+<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "gizli-gorevler", "tip": "yok", "havuz": [], "sabit": "Görevler dağıtıldı. Herkes kendi telefonuna baksın.", "dagit": ["Birine kendi telefon numarasını ezberden söylet", "Birini iki dakika boyunca tek bir konuda konuştur", "Grubun tamamını aynı anda susturacak bir cümle kur", "Birine kendi kıyafetini övdür", "Birini yer değiştirmeye ikna et", "Birine çocukluk anısı anlattır", "Birine senin için su getirt", "Birini bir şarkının sözünü hatırlamaya zorla", "Konuyu hiç alakasız bir yere getir ve kimse fark etmesin", "Birine aynı cümleyi iki kez söylet", "Birini telefonundan bir şey aratmaya ikna et", "Birine senden bir şey ödünç istet", "Üç kişiyi aynı anda güldür", "Birine ayakkabısını çıkarttır", "Birini bir bahisle ikna et", "Birine gelecek hafta için plan yaptır", "Birine en sevdiği filmi anlattır", "Birine kendi yaşını yüksek sesle söylet", "Birini masadan kaldırıp geri oturt", "Birine telefonunu sana uzattır", "Birine bir şeyi saymasını yaptır", "Birine bir ünlünün adını söylet", "Masadaki birini taklit et ve kimse fark etmesin", "Birine senin adını yüksek sesle söylet", "Birini bir fotoğraf çekmeye ikna et", "Birine bir yemek tarifi anlattır", "Birini pencereye ya da kapıya baktır", "Birine saatine bakmasını yaptır", "Birini bir şeyi tekrar açıklamak zorunda bırak", "Birine bir hayvan sesi çıkarttır", "Birine bir şeyin fiyatını tahmin ettir", "Birini kendi söylediği bir şeyden vazgeçirt", "Birine en son nereye gittiğini anlattır", "Birini iki şey arasında seçim yapmaya zorla", "Birine bir espri yaptır", "Birine bir müzik açtır", "Birini sana hak verdir", "Birine masadaki bir şeyi uzattır", "Birine ismini yanlış söyle ve düzelttir", "Birine bir şeyi koklattır", "Birini bir anlığına ayağa kaldır", "Birine en sevdiği rengi söylet", "Birine bir soruyu soruyla cevaplattır", "Birine bir şeyi tarif etmek için elini kullandır", "Birini bir konuda fikrini değiştirmeye ikna et", "Birine bir sır verdir", "Birine kaç saat uyuduğunu söylet", "Birini masadaki başka birine soru sormaya yönlendir", "Birine bir şeyi beğendiğini söylet", "Birine geçen hafta ne yaptığını anlattır", "Birini bir kelimeyi hecelemeye zorla", "Birine fısıltıyla konuşturt", "Birini güldürüp sonra ciddileştir", "Birine seninle aynı şeyi söylet", "Birini bir şeyi tekrar denemeye ikna et", "Birine bir yer adı söylet", "Birine kendisiyle ilgili bir itiraf yaptır", "Birini kısa bir süre sessiz kalmaya ikna et", "Birine telefonunun şarjını söylet", "Birine bir rakam söylet", "Birine seni bir konuda düzelttir", "Birine masadan bir şey aldır", "Birini bir şeyi göstermek için telefonunu açtır", "Birine bir alışkanlığını anlattır", "Birini aynı soruyu iki kişiye sormaya yönlendir", "Birine bir yemeği sevmediğini söylet", "Birini bir dakika boyunca sana baktır", "Birine geçmişten bir pişmanlık anlattır", "Birini bir konuda abartmaya ikna et", "Birine bir hayalini anlattır", "Birine bir markanın adını söylet", "Birini bir şeyi tekrar okumaya zorla"], "anonim": false, "ekle": false, "sayisal": false, "grupla": false, "sure": null, "yeniEtiket": "Görevleri dağıt", "tekrarEtiket": "Yeniden dağıt", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Cevabın…", "oda": true, "yazma": false, "kisiBasi": 2, "yabanci": false, "gizliBaslik": null, "dagitUyari": null};
 const API = C.api, g = i => document.getElementById(i);
 let kod = null, ben = null, zaman = null, yerel = null, yerelAcik = false, sonDurum = null;
 
@@ -184,6 +184,11 @@ function cik(){
   g('yeni').hidden = false; g('yeni').textContent = C.yeniEtiket;
 }
 async function yeniSoru(){
+  if(C.yabanci){
+    const y = uret();
+    await api('/oda/'+kod+'/dagit', {id:ben, gorevler:[y.metin], mod:'yabanci',
+      tekMetin:'SEN YABANCISIN. Yeri bilmiyorsun, yakalanmadan anlamaya çalış.', metin:C.sabit});
+    tazele(); return; }
   if(C.dagit){ await api('/oda/'+kod+'/dagit',
     {id:ben, gorevler:C.dagit, kisiBasi:C.kisiBasi||1, metin:C.sabit}); tazele(); return; }
   const s = uret();
@@ -214,7 +219,7 @@ function ciz(d){
 
   g('yeni').hidden = !d.sahip;
   g('yeni').textContent = d.soru ? C.tekrarEtiket : C.yeniEtiket;
-  if(C.dagit) g('serbest').hidden = true;
+  if(C.dagit || C.yabanci) g('serbest').hidden = true;
   g('sureAlan').hidden = !(C.sure && d.soru);
 
   const yazilabilir = !d.acik && C.yazma !== false;
@@ -289,10 +294,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   g('ad').value = localStorage.getItem('circle_ad') || '';
-  g('yeni').hidden = !!C.dagit; g('yeni').textContent = C.yeniEtiket;
-  if(C.dagit){ g('serbest').textContent = 'Görevleri dağıtmak için önce oda kurun.';
-               g('serbest').hidden = false; }
+  const dagitimli = !!C.dagit || !!C.yabanci;
+  g('yeni').hidden = dagitimli; g('yeni').textContent = C.yeniEtiket;
+  if(dagitimli){ g('serbest').textContent = C.dagitUyari || 'Dağıtmak için önce oda kurun.';
+                 g('serbest').hidden = false; }
   g('alan').placeholder = C.yazEtiket;
+  if(C.gizliBaslik) g('gizliBaslik').textContent = C.gizliBaslik;
   if(C.havuz && C.havuz.length) g('serbest').hidden = false;
   g('yeni').onclick = () => kod ? yeniSoru() : yerelBas();
   g('kapat').onclick = async () => { if(kod){ await api('/oda/'+kod+'/kapat', {id:ben}); tazele(); }

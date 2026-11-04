@@ -46,11 +46,10 @@ function ses(f,sure,tip){ac=ac||new (window.AudioContext||window.webkitAudioCont
  o.connect(g);g.connect(ac.destination);g.gain.setValueAtTime(.18,ac.currentTime);
  g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+sure);o.start();o.stop(ac.currentTime+sure);}
 function patla(){for(let i=0;i<9;i++)setTimeout(()=>ses(90+Math.random()*120,.3,"square"),i*70);
- d.getElementById("durum").textContent="PATLADI";d.body.style.background="#8C1F3F";
- setTimeout(()=>d.body.style.background="",420);}
+ d.body.style.background="#8C1F3F";setTimeout(()=>d.body.style.background="",420);}
 let pas=0;
 function tik(){const kalan=bitis-Date.now();if(kalan<=0){clearInterval(t);calisiyor=false;patla();
- d.getElementById("durum").textContent=pas+" el dayandı";return;}
+ d.getElementById("durum").textContent="PATLADI · "+pas+" el dayandı · Sonraki ile devam";return;}
  ses(kalan<6000?1200:760,.05);}
 function yeniEl(){
  if(elSayac%3===0){aktifHece=hecSec();}

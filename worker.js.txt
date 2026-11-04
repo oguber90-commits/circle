@@ -154,17 +154,25 @@ export default {
           d.soru = {metin: kirp(g.metin, 600), cevap: kirp(g.cevap, 600),
                     anonim: !!g.anonim, ekle: !!g.ekle};
         } else if (p[2] === 'dagit') {
-          // her oyuncuya kisiBasi kadar görev, hiçbiri kimseyle aynı değil
           const havuz = karistir((Array.isArray(g.gorevler) ? g.gorevler : []).slice());
           const oy = karistir((await oyuncuListe(env, kod)).map(o => o.id));
-          const n = Math.max(1, Math.min(5, Number(g.kisiBasi) || 1));
           const islem = [env.DB.prepare('UPDATE oyuncular SET gizli = NULL WHERE kod = ?').bind(kod)];
-          let sira = 0;
-          for (const id of oy) {
-            const pay = [];
-            for (let j = 0; j < n && havuz.length; j++) pay.push(havuz[sira++ % havuz.length]);
-            islem.push(env.DB.prepare('UPDATE oyuncular SET gizli = ? WHERE id = ?')
-              .bind(kirp(pay.join('\n'), 900), id));
+          if (g.mod === 'yabanci') {
+            // herkese aynı metin, rastgele bir kişiye farklı olan
+            const ortak = kirp(havuz[0] || '', 300);
+            const tek = kirp(g.tekMetin || 'Sen yabancısın', 300);
+            oy.forEach((id, i) => islem.push(
+              env.DB.prepare('UPDATE oyuncular SET gizli = ? WHERE id = ?').bind(i === 0 ? tek : ortak, id)));
+          } else {
+            // her oyuncuya kisiBasi kadar görev, hiçbiri kimseyle aynı değil
+            const n = Math.max(1, Math.min(5, Number(g.kisiBasi) || 1));
+            let sira = 0;
+            for (const id of oy) {
+              const pay = [];
+              for (let j = 0; j < n && havuz.length; j++) pay.push(havuz[sira++ % havuz.length]);
+              islem.push(env.DB.prepare('UPDATE oyuncular SET gizli = ? WHERE id = ?')
+                .bind(kirp(pay.join('\n'), 900), id));
+            }
           }
           await env.DB.batch(islem);
           d.soru = {metin: kirp(g.metin, 600), cevap: '', anonim: false, ekle: false};
