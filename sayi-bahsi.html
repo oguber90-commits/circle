@@ -56,6 +56,15 @@ input,textarea{width:100%;padding:15px;border-radius:12px;border:1px solid rgba(
 .gercek{color:#7BE3A0}
 .puanli{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .sayac{font-size:52px;font-weight:650;text-align:center;line-height:1.1}
+.gsat{display:flex;gap:10px;align-items:center;justify-content:space-between;
+      padding:9px 0;border-bottom:1px solid rgba(246,241,228,.12)}
+.gsat:last-child{border-bottom:0}
+.gmet{font-size:18px;line-height:1.3;min-width:0}
+.izg{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:4px}
+.hc{border:1px solid rgba(246,241,228,.22);border-radius:7px;padding:9px 3px;text-align:center;
+    font-size:11px;line-height:1.2;font-weight:600;overflow-wrap:anywhere;min-height:44px;
+    display:flex;align-items:center;justify-content:center}
+@media (max-width:420px){.hc{font-size:9.5px;padding:7px 2px;min-height:40px}}
 .ayrac{margin:34px 0 22px;border-top:1px solid rgba(246,241,228,.12)}
 </style><a class="home" href="index.html">&larr; Circle</a><div class="tag">TAHMİN</div><h1>Sayı bahsi</h1><p class="lede">Soru açılır, herkes bir tahmin yazar. Tahminler küçükten büyüğe sıralı açılır, sonra doğru cevap görünür. En yakın tahmini yapan kazanır.</p>
 <div id="soruSar" class="sar" hidden>
@@ -103,10 +112,31 @@ değilsiniz, kendi sorularınızla da oynayabilirsiniz.</p>
   <h2>PUANLAR</h2><ul id="puanlar"></ul>
   <button class="pick ikincil" id="cik" style="margin-top:22px">Odadan çık</button>
 </div>
-<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "sayi-bahsi", "tip": "cift", "havuz": [["İnsan vücudunda kaç kemik vardır?", "206"], ["Türkiye'de kaç il vardır?", "81"], ["Türkiye'de kaç ilçe vardır?", "973"], ["Satranç tahtasında kaç kare vardır?", "64"], ["Bir piyanoda kaç tuş vardır?", "88"], ["Bir yetişkinde kaç diş bulunur?", "32"], ["Türk alfabesinde kaç harf vardır?", "29"], ["Jokersiz bir iskambil destesinde kaç kart vardır?", "52"], ["Everest kaç metredir?", "8.849"], ["Maraton kaç kilometredir?", "42,195"], ["Ay'a kaç insan ayak bastı?", "12"], ["Rubik küpünün yüzeyinde kaç küçük kare vardır?", "54"], ["Basketbol potası kaç metre yüksektedir?", "3,05"], ["Bir günde kaç saniye vardır?", "86.400"], ["Bir yılda kaç saat vardır?", "8.760"], ["Bir yılda kaç dakika vardır?", "525.600"], ["Nil Nehri yaklaşık kaç kilometredir?", "6.650"], ["Birleşmiş Milletler'in kaç üyesi vardır?", "193"], ["Dünya'nın çapı yaklaşık kaç kilometredir?", "12.742"], ["Titanik hangi yıl battı?", "1912"], ["Olimpiyat bayrağında kaç halka vardır?", "5"], ["Güneş ışığı Dünya'ya kaç dakikada ulaşır?", "8"], ["Bir zarın karşılıklı iki yüzünün toplamı kaçtır?", "7"], ["Türkiye kaç ülkeyle kara sınırı paylaşır?", "8"], ["Bir oktavda kaç beyaz tuş vardır?", "7"], ["Pi sayısının virgülden sonraki ilk üç rakamı nedir?", "141"], ["Uzatmasız bir futbol maçı kaç dakikadır?", "90"], ["Voleybolda bir takım sahaya kaç oyuncu çıkarır?", "6"], ["Bir yılda kaç tam hafta vardır?", "52"], ["Işık saniyede kaç kilometre yol alır?", "299.792"], ["Bir yetişkinin vücudunda yaklaşık kaç litre kan vardır?", "5"], ["İnsanda kaç kromozom vardır?", "46"], ["Periyodik tabloda kaç element vardır?", "118"], ["Türkiye'nin yüzölçümü yaklaşık kaç kilometrekaredir?", "783.562"], ["Boğaziçi Köprüsü hangi yıl açıldı?", "1973"], ["Bugünkü Ayasofya hangi yıl tamamlandı?", "537"], ["Mona Lisa tablosu kaç santimetre yüksekliğindedir?", "77"], ["Eyfel Kulesi kaç metredir?", "330"], ["Özgürlük Heykeli kaidesiyle birlikte kaç metredir?", "93"], ["Beyaz Saray'da kaç oda vardır?", "132"], ["Erkek bir Afrika fili yaklaşık kaç kilo gelir?", "6.000"], ["Mavi balina kaç metre uzunluğa ulaşabilir?", "30"], ["Zürafanın boynunda kaç omur vardır?", "7"], ["Ahtapotun kaç kalbi vardır?", "3"], ["İnsan kalbi günde yaklaşık kaç kez atar?", "100.000"], ["Yetişkin bir insan beyni yaklaşık kaç gramdır?", "1.400"], ["NBA'de bir maç kaç dakikadır?", "48"], ["Tenis kortu kaç metre uzunluğundadır?", "23,77"], ["Olimpik yüzme havuzu kaç metredir?", "50"], ["Bir golf sahasında kaç delik vardır?", "18"], ["Bowlingde kaç pin dizilir?", "10"], ["Dama tahtasında toplam kaç taş vardır?", "24"], ["Tavlada toplam kaç pul vardır?", "30"], ["Okey takımında kaç taş vardır?", "106"], ["Monopoly'de satın alınabilen kaç mülk vardır?", "28"], ["İlk modern olimpiyatlar hangi yıl yapıldı?", "1896"], ["Berlin Duvarı hangi yıl yıkıldı?", "1989"], ["Ay Dünya'dan yaklaşık kaç kilometre uzaktadır?", "384.400"], ["Güneş Dünya'dan yaklaşık kaç milyon kilometre uzaktadır?", "150"], ["Bir ışık yılı kaç trilyon kilometredir?", "9,46"], ["Mars'ta bir gün kaç saat sürer?", "24,6"], ["Satürn'ün bir yılı kaç Dünya yılına denktir?", "29"], ["Amazon ormanı kaç ülkeye yayılır?", "9"], ["Sahra Çölü kaç milyon kilometrekaredir?", "9"], ["Everest'e ilk kez hangi yıl çıkıldı?", "1953"], ["Ağrı Dağı kaç metredir?", "5.137"], ["Van Gölü kaç kilometrekaredir?", "3.713"], ["İstanbul Boğazı kaç kilometre uzunluğundadır?", "31"], ["Türkiye'nin sahil şeridi kaç kilometredir?", "8.333"], ["Dolmabahçe Sarayı'nda kaç oda vardır?", "285"], ["Topkapı Sarayı'nın yapımına hangi yıl başlandı?", "1460"], ["Galata Kulesi kaç metredir?", "67"], ["Bir insan dakikada ortalama kaç kez göz kırpar?", "15"], ["Bir yetişkinin derisi yaklaşık kaç kilogramdır?", "4"], ["Ortalama bir uyluk kemiği kaç santimetredir?", "48"], ["Bir yetişkinin bağırsakları toplam kaç metredir?", "7,5"], ["Bir insanın kafasında ortalama kaç saç teli vardır?", "100.000"], ["Kediler günde ortalama kaç saat uyur?", "15"], ["Koalalar günde kaç saat uyur?", "20"], ["Çitanın en yüksek hızı saatte kaç kilometredir?", "112"], ["100 gram domates kaç kaloridir?", "18"], ["Orta boy bir muz kaç kaloridir?", "105"], ["Bir yumurta kaç kaloridir?", "78"], ["A4 kağıdın uzun kenarı kaç milimetredir?", "297"], ["A4 kağıdın kısa kenarı kaç milimetredir?", "210"], ["Resmi bir futbol sahası en az kaç metre uzunluğunda olur?", "90"], ["Formula 1'de bir yarış en az kaç kilometredir?", "305"], ["Dünyada yaklaşık kaç dil konuşuluyor?", "7.000"], ["TC kimlik numarası kaç hanedir?", "11"], ["Türkiye'de IBAN kaç karakterdir?", "26"], ["EAN barkodu kaç haneden oluşur?", "13"], ["Harry Potter kaç kitaptan oluşur?", "7"], ["Beethoven kaç senfoni besteledi?", "9"], ["Beatles kaç stüdyo albümü çıkardı?", "13"], ["Thriller albümünde kaç şarkı vardır?", "9"], ["Oscar heykelciği kaç santimetredir?", "34"], ["Nobel Ödülü kaç dalda verilir?", "6"], ["Kaç burç vardır?", "12"], ["Bir yılda kaç dolunay olur?", "12"], ["Rulet çarkında kaç sayı vardır?", "37"], ["Bir domino setinde kaç taş vardır?", "28"], ["Standart bir bisiklet tekerleğinde kaç jant teli olur?", "36"], ["Bir oktavda kaç siyah tuş vardır?", "5"], ["Keman kaç tellidir?", "4"], ["Bir orkestra şefinin yönettiği senfonik orkestrada yaklaşık kaç müzisyen bulunur?", "80"], ["Antik dünyanın kaç harikası sayılır?", "7"], ["Bir satranç setinde kaç taş vardır?", "32"], ["Bir futbol topunda kaç parça vardır (klasik desen)?", "32"], ["Çin Seddi yaklaşık kaç kilometredir?", "21.196"], ["Bir insan ömrü boyunca ortalama kaç yıl uyur?", "26"], ["Pisa Kulesi kaç derece eğiktir?", "4"], ["Bir yıl kaç saniyedir?", "31.536.000"]], "sabit": "", "dagit": null, "anonim": false, "ekle": false, "sayisal": true, "grupla": false, "sure": null, "yeniEtiket": "Soru aç", "tekrarEtiket": "Yeni soru", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Tahminin…", "oda": true, "yazma": true, "kisiBasi": 1, "yabanci": false, "gizliBaslik": null, "dagitUyari": null};
+<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "sayi-bahsi", "tip": "cift", "havuz": [["İnsan vücudunda kaç kemik vardır?", "206"], ["Türkiye'de kaç il vardır?", "81"], ["Türkiye'de kaç ilçe vardır?", "973"], ["Satranç tahtasında kaç kare vardır?", "64"], ["Bir piyanoda kaç tuş vardır?", "88"], ["Bir yetişkinde kaç diş bulunur?", "32"], ["Türk alfabesinde kaç harf vardır?", "29"], ["Jokersiz bir iskambil destesinde kaç kart vardır?", "52"], ["Everest kaç metredir?", "8.849"], ["Maraton kaç kilometredir?", "42,195"], ["Ay'a kaç insan ayak bastı?", "12"], ["Rubik küpünün yüzeyinde kaç küçük kare vardır?", "54"], ["Basketbol potası kaç metre yüksektedir?", "3,05"], ["Bir günde kaç saniye vardır?", "86.400"], ["Bir yılda kaç saat vardır?", "8.760"], ["Bir yılda kaç dakika vardır?", "525.600"], ["Nil Nehri yaklaşık kaç kilometredir?", "6.650"], ["Birleşmiş Milletler'in kaç üyesi vardır?", "193"], ["Dünya'nın çapı yaklaşık kaç kilometredir?", "12.742"], ["Titanik hangi yıl battı?", "1912"], ["Olimpiyat bayrağında kaç halka vardır?", "5"], ["Güneş ışığı Dünya'ya kaç dakikada ulaşır?", "8"], ["Bir zarın karşılıklı iki yüzünün toplamı kaçtır?", "7"], ["Türkiye kaç ülkeyle kara sınırı paylaşır?", "8"], ["Bir oktavda kaç beyaz tuş vardır?", "7"], ["Pi sayısının virgülden sonraki ilk üç rakamı nedir?", "141"], ["Uzatmasız bir futbol maçı kaç dakikadır?", "90"], ["Voleybolda bir takım sahaya kaç oyuncu çıkarır?", "6"], ["Bir yılda kaç tam hafta vardır?", "52"], ["Işık saniyede kaç kilometre yol alır?", "299.792"], ["Bir yetişkinin vücudunda yaklaşık kaç litre kan vardır?", "5"], ["İnsanda kaç kromozom vardır?", "46"], ["Periyodik tabloda kaç element vardır?", "118"], ["Türkiye'nin yüzölçümü yaklaşık kaç kilometrekaredir?", "783.562"], ["Boğaziçi Köprüsü hangi yıl açıldı?", "1973"], ["Bugünkü Ayasofya hangi yıl tamamlandı?", "537"], ["Mona Lisa tablosu kaç santimetre yüksekliğindedir?", "77"], ["Eyfel Kulesi kaç metredir?", "330"], ["Özgürlük Heykeli kaidesiyle birlikte kaç metredir?", "93"], ["Beyaz Saray'da kaç oda vardır?", "132"], ["Erkek bir Afrika fili yaklaşık kaç kilo gelir?", "6.000"], ["Mavi balina kaç metre uzunluğa ulaşabilir?", "30"], ["Zürafanın boynunda kaç omur vardır?", "7"], ["Ahtapotun kaç kalbi vardır?", "3"], ["İnsan kalbi günde yaklaşık kaç kez atar?", "100.000"], ["Yetişkin bir insan beyni yaklaşık kaç gramdır?", "1.400"], ["NBA'de bir maç kaç dakikadır?", "48"], ["Tenis kortu kaç metre uzunluğundadır?", "23,77"], ["Olimpik yüzme havuzu kaç metredir?", "50"], ["Bir golf sahasında kaç delik vardır?", "18"], ["Bowlingde kaç pin dizilir?", "10"], ["Dama tahtasında toplam kaç taş vardır?", "24"], ["Tavlada toplam kaç pul vardır?", "30"], ["Okey takımında kaç taş vardır?", "106"], ["Monopoly'de satın alınabilen kaç mülk vardır?", "28"], ["İlk modern olimpiyatlar hangi yıl yapıldı?", "1896"], ["Berlin Duvarı hangi yıl yıkıldı?", "1989"], ["Ay Dünya'dan yaklaşık kaç kilometre uzaktadır?", "384.400"], ["Güneş Dünya'dan yaklaşık kaç milyon kilometre uzaktadır?", "150"], ["Bir ışık yılı kaç trilyon kilometredir?", "9,46"], ["Mars'ta bir gün kaç saat sürer?", "24,6"], ["Satürn'ün bir yılı kaç Dünya yılına denktir?", "29"], ["Amazon ormanı kaç ülkeye yayılır?", "9"], ["Sahra Çölü kaç milyon kilometrekaredir?", "9"], ["Everest'e ilk kez hangi yıl çıkıldı?", "1953"], ["Ağrı Dağı kaç metredir?", "5.137"], ["Van Gölü kaç kilometrekaredir?", "3.713"], ["İstanbul Boğazı kaç kilometre uzunluğundadır?", "31"], ["Türkiye'nin sahil şeridi kaç kilometredir?", "8.333"], ["Dolmabahçe Sarayı'nda kaç oda vardır?", "285"], ["Topkapı Sarayı'nın yapımına hangi yıl başlandı?", "1460"], ["Galata Kulesi kaç metredir?", "67"], ["Bir insan dakikada ortalama kaç kez göz kırpar?", "15"], ["Bir yetişkinin derisi yaklaşık kaç kilogramdır?", "4"], ["Ortalama bir uyluk kemiği kaç santimetredir?", "48"], ["Bir yetişkinin bağırsakları toplam kaç metredir?", "7,5"], ["Bir insanın kafasında ortalama kaç saç teli vardır?", "100.000"], ["Kediler günde ortalama kaç saat uyur?", "15"], ["Koalalar günde kaç saat uyur?", "20"], ["Çitanın en yüksek hızı saatte kaç kilometredir?", "112"], ["100 gram domates kaç kaloridir?", "18"], ["Orta boy bir muz kaç kaloridir?", "105"], ["Bir yumurta kaç kaloridir?", "78"], ["A4 kağıdın uzun kenarı kaç milimetredir?", "297"], ["A4 kağıdın kısa kenarı kaç milimetredir?", "210"], ["Resmi bir futbol sahası en az kaç metre uzunluğunda olur?", "90"], ["Formula 1'de bir yarış en az kaç kilometredir?", "305"], ["Dünyada yaklaşık kaç dil konuşuluyor?", "7.000"], ["TC kimlik numarası kaç hanedir?", "11"], ["Türkiye'de IBAN kaç karakterdir?", "26"], ["EAN barkodu kaç haneden oluşur?", "13"], ["Harry Potter kaç kitaptan oluşur?", "7"], ["Beethoven kaç senfoni besteledi?", "9"], ["Beatles kaç stüdyo albümü çıkardı?", "13"], ["Thriller albümünde kaç şarkı vardır?", "9"], ["Oscar heykelciği kaç santimetredir?", "34"], ["Nobel Ödülü kaç dalda verilir?", "6"], ["Kaç burç vardır?", "12"], ["Bir yılda kaç dolunay olur?", "12"], ["Rulet çarkında kaç sayı vardır?", "37"], ["Bir domino setinde kaç taş vardır?", "28"], ["Standart bir bisiklet tekerleğinde kaç jant teli olur?", "36"], ["Bir oktavda kaç siyah tuş vardır?", "5"], ["Keman kaç tellidir?", "4"], ["Bir orkestra şefinin yönettiği senfonik orkestrada yaklaşık kaç müzisyen bulunur?", "80"], ["Antik dünyanın kaç harikası sayılır?", "7"], ["Bir satranç setinde kaç taş vardır?", "32"], ["Bir futbol topunda kaç parça vardır (klasik desen)?", "32"], ["Çin Seddi yaklaşık kaç kilometredir?", "21.196"], ["Bir insan ömrü boyunca ortalama kaç yıl uyur?", "26"], ["Pisa Kulesi kaç derece eğiktir?", "4"], ["Bir yıl kaç saniyedir?", "31.536.000"]], "sabit": "", "dagit": null, "anonim": false, "ekle": false, "sayisal": true, "grupla": false, "sure": null, "yeniEtiket": "Soru aç", "tekrarEtiket": "Yeni soru", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Tahminin…", "oda": true, "yazma": true, "kisiBasi": 1, "yabanci": false, "gizliBaslik": null, "dagitUyari": null, "rol": false, "rolAz": null, "rolCok": null, "esik": 8, "izgara": false, "degistir": false};
 const API = C.api, g = i => document.getElementById(i);
 let kod = null, ben = null, zaman = null, yerel = null, yerelAcik = false, sonDurum = null;
 
+const KOD_RENK = {K:'#C0392B', M:'#2C7BB6', N:'#6B7785', S:'#111A24'};
+function izgaraCiz(d){
+  const kutu = g('soruSar');
+  if(!d.soru){ kutu.hidden = true; return; }
+  kutu.hidden = false;
+  const kel = d.soru.split('\n').filter(Boolean);
+  let anahtar = null;
+  let takim = '';
+  if(d.gizli && /^(KIRMIZI|MAVI)\n/.test(d.gizli)){
+    const par = d.gizli.split('\n');
+    takim = par[0]; anahtar = par[1] || '';
+  }
+  g('soruMetin').innerHTML =
+    (takim ? '<div class="cn" style="margin-bottom:8px">'+(takim==='KIRMIZI'?'KIRMIZI':'MAVİ')+
+             ' TAKIMIN İPUCU VERENİ, TELEFONU KİMSEYE GÖSTERME</div>' : '') +
+    '<div class="izg">' + kel.map((k,i) => {
+      const r = anahtar ? KOD_RENK[anahtar[i]] : null;
+      return '<div class="hc"'+(r ? ' style="background:'+r+';border-color:'+r+
+        (anahtar[i]==='S' ? ';color:#F6F1E4' : ';color:#0B1118')+'"' : '')+'>'+esc(k)+'</div>';
+    }).join('') + '</div>';
+}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function kar(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(p=>p[1]);}
 
@@ -184,6 +214,19 @@ function cik(){
   g('yeni').hidden = false; g('yeni').textContent = C.yeniEtiket;
 }
 async function yeniSoru(){
+  if(C.rol){
+    await api('/oda/'+kod+'/dagit', {id:ben, gorevler:[], mod:'rol',
+      rolAz:C.rolAz, rolCok:C.rolCok, esik:C.esik||8, metin:C.sabit});
+    tazele(); return; }
+  if(C.izgara){
+    const kel = []; const t2 = C.havuz.map((_,i)=>i);
+    for(let i=t2.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[t2[i],t2[j]]=[t2[j],t2[i]];}
+    for(let i=0;i<25;i++) kel.push(C.havuz[t2[i]]);
+    const harf = ('K'.repeat(9)+'M'.repeat(8)+'N'.repeat(7)+'S').split('');
+    for(let i=harf.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[harf[i],harf[j]]=[harf[j],harf[i]];}
+    await api('/oda/'+kod+'/dagit', {id:ben, gorevler:[harf.join('')], mod:'kod',
+      tekMetin:'Sen tahmincisin. İpucu vereni dinle.', metin:kel.join('\n')});
+    tazele(); return; }
   if(C.yabanci){
     const y = uret();
     await api('/oda/'+kod+'/dagit', {id:ben, gorevler:[y.metin], mod:'yabanci',
@@ -215,11 +258,25 @@ function ciz(d){
   if(d.soru) g('soruMetin').textContent = d.soru;
   g('kapat').hidden = !d.sahip;
   g('gizliKutu').hidden = !d.gizli;
-  if(d.gizli) g('gizliMetin').textContent = d.gizli;
+  if(d.gizli){
+    if(C.degistir){
+      g('gizliMetin').hidden = true;
+      g('gizliSatir').innerHTML = d.gizli.split('\n').map((x,i) =>
+        '<div class="gsat"><div class="gmet">'+esc(x)+'</div>'+
+        (d.hak>0 ? '<button class="pick ikincil mini" data-g="'+i+'">Değiştir</button>' : '')+
+        '</div>').join('');
+    } else {
+      g('gizliMetin').hidden = false;
+      g('gizliMetin').textContent = d.gizli;
+      g('gizliSatir').innerHTML = '';
+    }
+  }
+  if(C.izgara) izgaraCiz(d);
 
+  const dagitimli = !!C.dagit || !!C.yabanci || !!C.rol || !!C.izgara;
   g('yeni').hidden = !d.sahip;
   g('yeni').textContent = d.soru ? C.tekrarEtiket : C.yeniEtiket;
-  if(C.dagit || C.yabanci) g('serbest').hidden = true;
+  if(dagitimli) g('serbest').hidden = true;
   g('sureAlan').hidden = !(C.sure && d.soru);
 
   const yazilabilir = !d.acik && C.yazma !== false;
@@ -294,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
   g('ad').value = localStorage.getItem('circle_ad') || '';
-  const dagitimli = !!C.dagit || !!C.yabanci;
+  const dagitimli = !!C.dagit || !!C.yabanci || !!C.rol || !!C.izgara;
   g('yeni').hidden = dagitimli; g('yeni').textContent = C.yeniEtiket;
   if(dagitimli){ g('serbest').textContent = C.dagitUyari || 'Dağıtmak için önce oda kurun.';
                  g('serbest').hidden = false; }
@@ -310,6 +367,13 @@ document.addEventListener('DOMContentLoaded', () => {
   g('ac').onclick = async () => { await api('/oda/'+kod+'/ac', {id:ben}); tazele(); };
   g('cevapAc').onclick = async () => { await api('/oda/'+kod+'/cevapac', {id:ben}); tazele(); };
   g('yenitur').onclick = async () => { await api('/oda/'+kod+'/tur', {id:ben}); g('alan').value=''; tazele(); };
+  g('gizliSatir').onclick = async e => {
+    const b = e.target.closest('[data-g]'); if(!b || !kod) return;
+    b.disabled = true;
+    try { await api('/oda/'+kod+'/degistir', {id:ben, sira:+b.dataset.g, havuz:C.dagit||[]}); }
+    catch(err) { b.textContent = 'Hakkın yok'; }
+    tazele();
+  };
   g('puanlar').onclick = async e => { const b = e.target.closest('[data-p]'); if(!b||!kod) return;
     await api('/oda/'+kod+'/puan', {id:ben, sira:+b.dataset.p, delta:+b.dataset.d}); tazele(); };
   g('sureBtn').onclick = () => { if(sureT){ clearInterval(sureT); sureT=null;

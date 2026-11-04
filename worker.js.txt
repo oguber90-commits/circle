@@ -21,6 +21,8 @@ async function hazirla(env) {
     env.DB.prepare('CREATE TABLE IF NOT EXISTS oyuncular (kod TEXT NOT NULL, id TEXT PRIMARY KEY, ad TEXT NOT NULL, sira INTEGER NOT NULL, puan INTEGER NOT NULL DEFAULT 0, gizli TEXT)'),
     env.DB.prepare('CREATE TABLE IF NOT EXISTS cevaplar (kod TEXT NOT NULL, tur INTEGER NOT NULL, id TEXT NOT NULL, metin TEXT NOT NULL, sira INTEGER NOT NULL, PRIMARY KEY (kod, tur, id))'),
   ]);
+  try { await env.DB.prepare('ALTER TABLE oyuncular ADD COLUMN hak INTEGER NOT NULL DEFAULT 1').run(); }
+  catch (e) { /* sütun zaten var */ }
 }
 
 const bosDurum = () => ({acik: false, cevapAcik: false, soru: null, tur: 1, gercekYer: null, karisik: []});
@@ -37,7 +39,7 @@ async function odaYaz(env, kod, d) {
 }
 async function oyuncuListe(env, kod) {
   const r = await env.DB.prepare(
-    'SELECT id, ad, puan, gizli FROM oyuncular WHERE kod = ? ORDER BY sira ASC'
+    'SELECT id, ad, puan, gizli, hak FROM oyuncular WHERE kod = ? ORDER BY sira ASC'
   ).bind(kod).all();
   return r.results || [];
 }
@@ -79,6 +81,7 @@ async function gorunum(env, kod, d, id) {
     soru: d.soru ? d.soru.metin : null,
     cevap: d.cevapAcik && d.soru ? (d.soru.cevap || null) : null,
     gizli: ben ? ben.gizli || null : null,
+    hak: ben ? (ben.hak == null ? 1 : ben.hak) : 0,
     tur: d.tur,
     cevaplar,
   };
@@ -156,8 +159,22 @@ export default {
         } else if (p[2] === 'dagit') {
           const havuz = karistir((Array.isArray(g.gorevler) ? g.gorevler : []).slice());
           const oy = karistir((await oyuncuListe(env, kod)).map(o => o.id));
-          const islem = [env.DB.prepare('UPDATE oyuncular SET gizli = NULL WHERE kod = ?').bind(kod)];
-          if (g.mod === 'yabanci') {
+          const islem = [env.DB.prepare('UPDATE oyuncular SET gizli = NULL, hak = 1 WHERE kod = ?').bind(kod)];
+          if (g.mod === 'rol') {
+            // oyuncu sayısına göre az rol, kalanı çok rol
+            const esik = Number(g.esik) || 8;
+            const azSayi = oy.length >= esik ? 2 : 1;
+            oy.forEach((id, i) => islem.push(
+              env.DB.prepare('UPDATE oyuncular SET gizli = ? WHERE id = ?')
+                .bind(kirp(i < azSayi ? g.rolAz : g.rolCok, 300), id)));
+          } else if (g.mod === 'kod') {
+            // iki kişiye anahtar, kalanlara tahminci metni
+            const anahtar = kirp(havuz[0] || '', 400);
+            oy.forEach((id, i) => islem.push(
+              env.DB.prepare('UPDATE oyuncular SET gizli = ? WHERE id = ?')
+                .bind(i < 2 ? (i === 0 ? 'KIRMIZI\n' : 'MAVI\n') + anahtar
+                            : kirp(g.tekMetin || 'Sen tahmincisin', 300), id)));
+          } else if (g.mod === 'yabanci') {
             // herkese aynı metin, rastgele bir kişiye farklı olan
             const ortak = kirp(havuz[0] || '', 300);
             const tek = kirp(g.tekMetin || 'Sen yabancısın', 300);
@@ -192,6 +209,20 @@ export default {
         d.acik = true;
         if (p[2] === 'cevapac') d.cevapAcik = true;
         await odaYaz(env, kod, d);
+
+      } else if (p[2] === 'degistir') {
+        const oy = await oyuncuListe(env, kod);
+        const sen = oy.find(o => o.id === ben.id);
+        if (!sen || (sen.hak == null ? 1 : sen.hak) < 1 || !sen.gizli) return json({hata: 'hak yok'}, 403);
+        const satir = sen.gizli.split('\n');
+        const ix = Math.max(0, Math.min(satir.length - 1, Number(g.sira) || 0));
+        const kullanilan = new Set();
+        oy.forEach(o => (o.gizli || '').split('\n').forEach(x => x && kullanilan.add(x)));
+        const bos = (Array.isArray(g.havuz) ? g.havuz : []).filter(x => !kullanilan.has(x));
+        if (!bos.length) return json({hata: 'yedek gorev kalmadi'}, 409);
+        satir[ix] = kirp(bos[Math.floor(Math.random() * bos.length)], 300);
+        await env.DB.prepare('UPDATE oyuncular SET gizli = ?, hak = 0 WHERE id = ?')
+          .bind(satir.join('\n'), ben.id).run();
 
       } else if (p[2] === 'puan') {
         const oy = await oyuncuListe(env, kod);
