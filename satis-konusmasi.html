@@ -35,8 +35,11 @@ b{font-weight:650;color:#fff}
 </style>
 <body style="--acc:#D4426E"><a class="home" href="index.html">&larr; Circle</a><div class="tag">SAHNE</div><h1>Satış konuşması</h1><p class="lede">Sıradaki satıcı butona basar, çıkan iki kelimeden bir ürün uydurur ve otuz saniyede müşteriye satmaya çalışır.</p><div id="out" style="display:block;text-align:center;padding:40px 20px"><div id="k1" style="font-size:34px;font-weight:650;line-height:1.15">&nbsp;</div><div id="k2" style="font-size:34px;font-weight:650;line-height:1.15">&nbsp;</div></div><button class="pick" id="btn">İki kelime çek</button><script>const A=["buzlu", "sesli", "ters", "gizli", "elektrikli", "kokulu", "katlanır", "şişme", "görünmez", "ışıklı", "ıslak", "tüylü", "mıknatıslı", "sıcak", "delikli", "kayan"],B=["yastık", "ayakkabı", "şemsiye", "kaşık", "merdiven", "ayna", "çorap", "kutu", "halat", "bardak", "saat", "çanta", "fırça", "kemer", "anahtar", "battaniye", "fener", "makas", "tencere", "havlu", "sandalye", "kalem", "kapı", "tarak", "balon", "hortum", "terlik", "kova", "ip", "cam", "zil", "yelek"];
 const d=document;
+function torba(L){let t=[];return()=>{if(!t.length){t=L.map((_,i)=>i);
+ for(let i=t.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[t[i],t[j]]=[t[j],t[i]];}}return t.pop();};}
+const ca=torba(A), cb=torba(B);
 d.addEventListener("DOMContentLoaded",()=>{d.getElementById("btn").onclick=()=>{
- d.getElementById("k1").textContent=A[Math.floor(Math.random()*A.length)];
- d.getElementById("k2").textContent=B[Math.floor(Math.random()*B.length)];};});
+ d.getElementById("k1").textContent=A[ca()];
+ d.getElementById("k2").textContent=B[cb()];};});
 </script>
 <div class="foot">Circle</div></body></html>

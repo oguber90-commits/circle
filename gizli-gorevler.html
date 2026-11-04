@@ -110,12 +110,20 @@ let kod = null, ben = null, zaman = null, yerel = null, yerelAcik = false, sonDu
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function kar(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(p=>p[1]);}
 
-let sonIx = -1;
+/* torba: liste bitmeden aynı madde ikinci kez gelmez */
+let torba = [];
+function cek(){
+  if(!torba.length){
+    torba = C.havuz.map((_, i) => i);
+    for(let i = torba.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random()*(i+1)); [torba[i], torba[j]] = [torba[j], torba[i]];
+    }
+  }
+  return torba.pop();
+}
 function uret(){
   if(!C.havuz || !C.havuz.length) return {metin: C.sabit || '', cevap: ''};
-  let ix; do { ix = Math.floor(Math.random()*C.havuz.length); } while(C.havuz.length > 1 && ix === sonIx);
-  sonIx = ix;
-  const it = C.havuz[ix];
+  const it = C.havuz[cek()];
   if(C.tip === 'cift') return {metin: it[0], cevap: it[1]};
   if(C.tip === 'uclu'){
     const d = kar([0,1,2]);
