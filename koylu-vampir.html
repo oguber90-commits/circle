@@ -100,7 +100,7 @@ function ciz(d){
   g('lobi').hidden = !lobi;
   g('masa').hidden = lobi;
   if(lobi){
-    api('/oda/'+kod).then(x=>{
+    api('/oda/'+kod+'?id='+encodeURIComponent(ben)).then(x=>{
       g('lobiListe').innerHTML = x.oyuncular.map(o=>'<li>'+esc(o.ad)+'</li>').join('');
       g('lobiSay').textContent = x.kisi + ' kişi';
       g('baslat').hidden = !(x.sahip);

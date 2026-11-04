@@ -23,6 +23,21 @@ async function hazirla(env) {
   ]);
   try { await env.DB.prepare('ALTER TABLE oyuncular ADD COLUMN hak INTEGER NOT NULL DEFAULT 1').run(); }
   catch (e) { /* sütun zaten var */ }
+  try { await env.DB.prepare('ALTER TABLE oyuncular ADD COLUMN oy TEXT').run(); }
+  catch (e) { /* sütun zaten var */ }
+}
+
+async function oylariSil(env, kod) {
+  await env.DB.prepare('UPDATE oyuncular SET oy = NULL WHERE kod = ?').bind(kod).run();
+}
+// Aynı anda gelen son oylar fazı iki kere ilerletmesin: yalnız beklenen faz/tur duruyorsa yazar.
+async function odaYazKosullu(env, kod, d, faz, tur) {
+  const s = JSON.stringify(d), t = Date.now();
+  const r = await env.DB.prepare(
+    "UPDATE odalar SET durum = ?, guncel = ? WHERE kod = ? " +
+    "AND json_extract(durum, '$.oyun.faz') = ? AND json_extract(durum, '$.oyun.tur') = ?"
+  ).bind(s, t, kod, faz, tur).run();
+  return !!(r.meta && r.meta.changes);
 }
 
 const bosDurum = () => ({acik: false, cevapAcik: false, soru: null, tur: 1, gercekYer: null, karisik: []});
@@ -39,7 +54,7 @@ async function odaYaz(env, kod, d) {
 }
 async function oyuncuListe(env, kod) {
   const r = await env.DB.prepare(
-    'SELECT id, ad, puan, gizli, hak FROM oyuncular WHERE kod = ? ORDER BY sira ASC'
+    'SELECT id, ad, puan, gizli, hak, oy FROM oyuncular WHERE kod = ? ORDER BY sira ASC'
   ).bind(kod).all();
   return r.results || [];
 }
@@ -93,13 +108,20 @@ const GUNDUZ_SN = 180;
 
 function vampirSayisi(n) { return n >= 11 ? 3 : (n >= 7 ? 2 : 1); }
 
+function oylariTopla(oy) {
+  const m = {};
+  oy.forEach(x => { if (x.oy) m[x.id] = x.oy; });
+  return m;
+}
+
 function vampirGorunum(d, oy, id) {
   const o = d.oyun;
   const adi = new Map(oy.map(x => [x.id, x.ad]));
+  const oylar = oylariTopla(oy);
   const yasayan = o.yasayan.filter(x => adi.has(x));
   const benVampir = o.roller[id] === 'vampir';
   const benYasiyor = yasayan.includes(id);
-  const oyVerenler = Object.keys(o.oy || {});
+  const oyVerenler = Object.keys(oylar);
   const gerekli = o.faz === 'gece'
     ? yasayan.filter(x => o.roller[x] === 'vampir')
     : yasayan;
@@ -115,7 +137,7 @@ function vampirGorunum(d, oy, id) {
       : [],
     yasayan: yasayan.map(x => ({id: x, ad: adi.get(x), oyVerdi: oyVerenler.includes(x)})),
     olenler: (o.olum || []).map(x => ({ad: adi.get(x.id) || '', faz: x.faz, rol: x.rol})),
-    oyum: (o.oy || {})[id] || null,
+    oyum: oylar[id] || null,
     oySayisi: oyVerenler.length,
     gereken: gerekli.length,
     kalanSn: o.faz === 'gunduz' && o.bitis ? Math.max(0, Math.round((o.bitis - Date.now()) / 1000)) : null,
@@ -128,7 +150,7 @@ function cozumle(d, oy) {
   const o = d.oyun;
   const adi = new Map(oy.map(x => [x.id, x.ad]));
   const yasayan = o.yasayan.filter(x => adi.has(x));
-  const oylar = o.oy || {};
+  const oylar = oylariTopla(oy);
   let olen = null;
 
   if (o.faz === 'gece') {
@@ -156,7 +178,6 @@ function cozumle(d, oy) {
     o.yasayan = o.yasayan.filter(x => x !== olen);
     o.olum.push({id: olen, faz: o.faz, rol: o.roller[olen], tur: o.tur});
   }
-  o.oy = {};
 
   const kalan = o.yasayan.filter(x => adi.has(x));
   const kalanVamp = kalan.filter(x => o.roller[x] === 'vampir').length;
@@ -203,7 +224,7 @@ export default {
       }
 
       const kod = (p[1] || '').toUpperCase();
-      const d = await odaOku(env, kod);
+      let d = await odaOku(env, kod);
       if (!d) return json({hata: 'oda yok'}, 404);
 
       if (p.length === 2 && istek.method === 'GET') {
@@ -312,35 +333,53 @@ export default {
         const roller = {};
         sira.forEach((x, i) => roller[x] = i < vs ? 'vampir' : 'koylu');
         d.oyun = {faz: 'gece', tur: 1, yasayan: oy.map(o => o.id), roller,
-                  oy: {}, olum: [], bitis: null, sonuc: null,
+                  olum: [], bitis: null, sonuc: null,
                   mesaj: 'Gece. Vampirler kurbanını seçiyor.'};
         d.soru = null; d.acik = false; d.cevapAcik = false;
+        await oylariSil(env, kod);
         await odaYaz(env, kod, d);
+        oy.forEach(x => x.oy = null);
         return json(vampirGorunum(d, oy, ben.id));
 
       } else if (p[2] === 'voy') {
         if (!d.oyun || d.oyun.faz === 'bitti') return json({hata: 'oyun yok'}, 409);
-        const oy = await oyuncuListe(env, kod);
         const o = d.oyun;
-        const adi = new Set(oy.map(x => x.id));
+        const once = await oyuncuListe(env, kod);
+        const adi = new Set(once.map(x => x.id));
         const yasayan = o.yasayan.filter(x => adi.has(x));
         const yetkili = o.faz === 'gece' ? (o.roller[ben.id] === 'vampir') : true;
         if (!yasayan.includes(ben.id) || !yetkili) return json({hata: 'oy veremezsin'}, 403);
-        o.oy = o.oy || {};
-        o.oy[ben.id] = String(g.hedef || '');
+        await env.DB.prepare('UPDATE oyuncular SET oy = ? WHERE id = ?')
+          .bind(kirp(g.hedef, 64), ben.id).run();
+        let oy = await oyuncuListe(env, kod);
+        const oylar = oylariTopla(oy);
         const gerekli = o.faz === 'gece'
           ? yasayan.filter(x => o.roller[x] === 'vampir')
           : yasayan;
-        if (gerekli.every(x => o.oy[x])) cozumle(d, oy);
-        await odaYaz(env, kod, d);
+        if (gerekli.every(x => oylar[x])) {
+          const faz = o.faz, tur = o.tur;
+          if (cozumle(d, oy) && await odaYazKosullu(env, kod, d, faz, tur)) {
+            await oylariSil(env, kod);
+            oy.forEach(x => x.oy = null);
+          } else {
+            d = await odaOku(env, kod);
+            oy = await oyuncuListe(env, kod);
+          }
+        }
         return json(vampirGorunum(d, oy, ben.id));
 
       } else if (p[2] === 'vdurum') {
         if (!d.oyun) return json({oyunVar: false});
-        const oy = await oyuncuListe(env, kod);
+        let oy = await oyuncuListe(env, kod);
         if (d.oyun.faz === 'gunduz' && d.oyun.bitis && Date.now() > d.oyun.bitis) {
-          cozumle(d, oy);
-          await odaYaz(env, kod, d);
+          const faz = d.oyun.faz, tur = d.oyun.tur;
+          if (cozumle(d, oy) && await odaYazKosullu(env, kod, d, faz, tur)) {
+            await oylariSil(env, kod);
+            oy.forEach(x => x.oy = null);
+          } else {
+            d = await odaOku(env, kod);
+            oy = await oyuncuListe(env, kod);
+          }
         }
         return json(vampirGorunum(d, oy, ben.id));
 
