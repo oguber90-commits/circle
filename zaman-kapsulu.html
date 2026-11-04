@@ -1,0 +1,61 @@
+<!doctype html><html lang="tr"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111A24">
+<title>Zaman kapsülü · Circle</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#111A24;--cream:#F6F1E4;--acc:#1C8B9C}
+body{background:var(--ink);color:var(--cream);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+     -webkit-font-smoothing:antialiased;padding:28px 20px 72px;max-width:720px;margin:0 auto}
+a{color:inherit}
+.home{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;
+      text-transform:uppercase;opacity:.55;text-decoration:none}
+.home:hover{opacity:1}
+.tag{display:block;margin-top:26px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+     color:var(--acc);font-weight:600}
+h1{font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:650;margin-top:10px}
+.lede{margin-top:14px;opacity:.72;max-width:46ch}
+.pick{width:100%;margin-top:26px;padding:16px;border:0;border-radius:14px;background:var(--acc);
+      color:#0B1118;font:inherit;font-weight:650;letter-spacing:.01em;cursor:pointer}
+.pick:active{transform:translateY(1px)}
+#out{display:none;margin-top:16px;padding:20px;border-radius:14px;background:rgba(246,241,228,.07);
+     border:1px solid rgba(246,241,228,.16);font-size:20px;line-height:1.35}
+h2{margin-top:40px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;opacity:.5;font-weight:600}
+ul{list-style:none;margin-top:12px}
+li{padding:12px 0;border-bottom:1px solid rgba(246,241,228,.11)}
+li:last-child{border-bottom:0}
+b{font-weight:650;color:#fff}
+.foot{margin-top:56px;padding-top:20px;border-top:1px solid rgba(246,241,228,.12);font-size:12px;
+      letter-spacing:.2em;text-transform:uppercase;opacity:.38}
+.grid{margin-top:28px;display:grid;gap:10px}
+.cardlink{display:block;padding:16px 18px;border-radius:13px;text-decoration:none;
+          background:rgba(246,241,228,.055);border:1px solid rgba(246,241,228,.13)}
+.cardlink:hover{background:rgba(246,241,228,.1)}
+.cardlink .t{font-weight:600;font-size:17px}
+.cardlink .s{font-size:12px;letter-spacing:.16em;text-transform:uppercase;margin-top:5px;opacity:.55}
+</style>
+<body style="--acc:#1C8B9C"><a class="home" href="index.html">&larr; Circle</a><div class="tag">Sohbet</div><h1>Zaman kapsülü</h1><p class="lede">Herkes bir yıl sonrası için bir tahmin yazsın. Hepsini ekleyince takvim dosyasını indirin: tam bir yıl sonra, tahminlerle birlikte hatırlatma olarak önünüze düşer.</p><div style="margin-top:26px;display:grid;gap:10px"><input id="kisi" placeholder="Kim yazıyor?" style="padding:14px;border-radius:12px;border:1px solid rgba(246,241,228,.2);background:rgba(246,241,228,.06);color:inherit;font:inherit"><textarea id="tahmin" rows="3" placeholder="Bir yıl sonra…" style="padding:14px;border-radius:12px;border:1px solid rgba(246,241,228,.2);background:rgba(246,241,228,.06);color:inherit;font:inherit;resize:vertical"></textarea></div><button class="pick" id="btn">Kapsüle ekle</button><h2>Kapsüldekiler</h2><ul id="liste"></ul><button class="pick" id="indir" style="display:none;margin-top:20px;background:rgba(246,241,228,.14);color:var(--cream)">Takvime ekle, bir yıl sonrası</button>
+<script>
+const L=[];const d=document;
+function ciz(){d.getElementById("liste").innerHTML=L.map((x,i)=>
+ `<li><b>${x.k}</b>: ${x.t} <span style="float:right;opacity:.5;cursor:pointer" onclick="sil(${i})">sil</span></li>`).join("");
+ d.getElementById("indir").style.display=L.length?"block":"none";}
+function sil(i){L.splice(i,1);ciz();}
+function ekle(){const k=d.getElementById("kisi").value.trim(),t=d.getElementById("tahmin").value.trim();
+ if(!k||!t)return;L.push({k:k,t:t});d.getElementById("kisi").value="";d.getElementById("tahmin").value="";
+ d.getElementById("kisi").focus();ciz();}
+function iki(n){return String(n).padStart(2,"0");}
+function indir(){
+ const s=new Date();s.setFullYear(s.getFullYear()+1);
+ const g=dt=>dt.getUTCFullYear()+iki(dt.getUTCMonth()+1)+iki(dt.getUTCDate())+"T"+iki(dt.getUTCHours())+iki(dt.getUTCMinutes())+"00Z";
+ const b=new Date(s.getTime()+3600000);
+ const metin=L.map(x=>x.k+": "+x.t).join("\\n");
+ const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Circle//Zaman Kapsulu//TR","BEGIN:VEVENT",
+  "UID:circle-"+Date.now()+"@circle","DTSTAMP:"+g(new Date()),"DTSTART:"+g(s),"DTEND:"+g(b),
+  "SUMMARY:Circle: zaman kapsülü açılıyor","DESCRIPTION:Bir yıl önce yazdıklarınız:\\n\\n"+metin,
+  "BEGIN:VALARM","TRIGGER:-PT15M","ACTION:DISPLAY","DESCRIPTION:Zaman kapsülü","END:VALARM",
+  "END:VEVENT","END:VCALENDAR"].join("\r\n");
+ const a=d.createElement("a");a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
+ a.download="circle-zaman-kapsulu.ics";a.click();}
+d.addEventListener("DOMContentLoaded",()=>{d.getElementById("btn").onclick=ekle;d.getElementById("indir").onclick=indir;});
+</script>
+<div class="foot">Circle</div></body></html>
