@@ -56,6 +56,7 @@ input,textarea{width:100%;padding:15px;border-radius:12px;border:1px solid rgba(
 .gercek{color:#7BE3A0}
 .puanli{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .sayac{font-size:52px;font-weight:650;text-align:center;line-height:1.1}
+.ayrac{margin:34px 0 22px;border-top:1px solid rgba(246,241,228,.12)}
 </style><a class="home" href="index.html">&larr; Circle</a><div class="tag">BECERİ</div><h1>Kategori yarışı</h1><p class="lede">Kategori açılır, süre başlar, herkes aklına geleni yazar. Süre bitince hepsi açılır, en çok yazan kazanır.</p>
 <div id="soruSar" class="sar" hidden>
   <div class="kutu"><div class="soru" id="soruMetin"></div></div>
@@ -64,16 +65,16 @@ input,textarea{width:100%;padding:15px;border-radius:12px;border:1px solid rgba(
 <div id="dogruKutu" class="kutu" hidden style="border-color:rgba(123,227,160,.4)">
   <div class="cn">DOĞRU CEVAP</div><div class="soru gercek" id="dogruMetin"></div></div>
 <button class="pick" id="yeni" hidden></button>
+<p class="lede" id="serbest" hidden style="font-size:13px;margin-top:10px">Soru açmak zorunda
+değilsiniz, kendi sorularınızla da oynayabilirsiniz.</p>
 <div id="sureAlan" hidden>
   <div class="kutu"><div class="sayac" id="sayac">60</div></div>
   <button class="pick ikincil" id="sureBtn">Süreyi başlat</button>
 </div>
 
 <div id="giris">
-  <h2 id="odaBaslik">HERKES KENDİ TELEFONUNDAN</h2>
-  <p class="lede" style="font-size:13px;margin-top:8px">Bir kişi oda kurar, diğerleri kodu girer.
-  Yazdıklarınız aynı anda açılır. Kağıt kalemle oynayacaksanız bu kısma hiç girmeyin.</p>
-  <input id="ad" placeholder="Adın" maxlength="18" style="margin-top:14px">
+  <div class="ayrac"></div>
+  <input id="ad" placeholder="Adın" maxlength="18">
   <button class="pick" id="kur">Oda kur</button>
   <div class="satir" style="margin-top:10px">
     <input id="kodgir" placeholder="ODA KODU" maxlength="4" style="text-transform:uppercase">
@@ -102,7 +103,7 @@ input,textarea{width:100%;padding:15px;border-radius:12px;border:1px solid rgba(
   <h2>PUANLAR</h2><ul id="puanlar"></ul>
   <button class="pick ikincil" id="cik" style="margin-top:22px">Odadan çık</button>
 </div>
-<h2>KATEGORİLER</h2><ul><li>Beyaz eşya markaları</li><li>Sinemada izlediğin filmler</li><li>Bir şeyin içine konulan şeyler</li><li>Türkiye'de il isimleri</li><li>Sütlü tatlılar</li><li>Kedi isimleri</li><li>Takım adları</li><li>Mutfakta bulunan metal şeyler</li><li>Çocuk oyunları</li><li>İçinde k geçen meyveler</li><li>Ayakkabı türleri</li><li>Bir evde kesinlikle bulunan şeyler</li><li>Dizi karakterleri</li><li>Yol kenarında görülen şeyler</li><li>Sabah yapılan şeyler</li><li>Soğuk içecekler</li><li>Okul malzemeleri</li><li>Hayvan sesleri</li><li>Bagajda taşınan şeyler</li><li>Tatil yerleri</li><li>Ünlü çiftler</li><li>Acı veren şeyler</li><li>Ücretsiz olan şeyler</li><li>Geç kalma bahaneleri</li><li>Cebe sığan şeyler</li><li>Islanınca bozulan şeyler</li><li>Pille çalışan şeyler</li><li>Kokusundan tanınan şeyler</li><li>Katlanabilen şeyler</li><li>Gece açık olan yerler</li></ul><script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "kategori-yarisi", "tip": "metin", "havuz": ["Beyaz eşya markaları", "Sinemada izlediğin filmler", "Bir şeyin içine konulan şeyler", "Türkiye'de il isimleri", "Sütlü tatlılar", "Kedi isimleri", "Takım adları", "Mutfakta bulunan metal şeyler", "Çocuk oyunları", "İçinde k geçen meyveler", "Ayakkabı türleri", "Bir evde kesinlikle bulunan şeyler", "Dizi karakterleri", "Yol kenarında görülen şeyler", "Sabah yapılan şeyler", "Soğuk içecekler", "Okul malzemeleri", "Hayvan sesleri", "Bagajda taşınan şeyler", "Tatil yerleri", "Ünlü çiftler", "Acı veren şeyler", "Ücretsiz olan şeyler", "Geç kalma bahaneleri", "Cebe sığan şeyler", "Islanınca bozulan şeyler", "Pille çalışan şeyler", "Kokusundan tanınan şeyler", "Katlanabilen şeyler", "Gece açık olan yerler"], "sabit": "", "dagit": null, "anonim": false, "ekle": false, "sayisal": false, "grupla": false, "sure": 60, "yeniEtiket": "Kategori aç", "tekrarEtiket": "Yeni kategori", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Virgülle ayırarak yaz…", "odaBaslik": null};
+<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "kategori-yarisi", "tip": "metin", "havuz": ["Beyaz eşya markaları", "Sinemada izlediğin filmler", "Bir şeyin içine konulan şeyler", "Türkiye'de il isimleri", "Sütlü tatlılar", "Kedi isimleri", "Takım adları", "Mutfakta bulunan metal şeyler", "Çocuk oyunları", "İçinde k geçen meyveler", "Ayakkabı türleri", "Bir evde kesinlikle bulunan şeyler", "Dizi karakterleri", "Yol kenarında görülen şeyler", "Sabah yapılan şeyler", "Soğuk içecekler", "Okul malzemeleri", "Hayvan sesleri", "Bagajda taşınan şeyler", "Tatil yerleri", "Ünlü çiftler", "Acı veren şeyler", "Ücretsiz olan şeyler", "Geç kalma bahaneleri", "Cebe sığan şeyler", "Islanınca bozulan şeyler", "Pille çalışan şeyler", "Kokusundan tanınan şeyler", "Katlanabilen şeyler", "Gece açık olan yerler"], "sabit": "", "dagit": null, "anonim": false, "ekle": false, "sayisal": false, "grupla": false, "sure": 60, "yeniEtiket": "Kategori aç", "tekrarEtiket": "Yeni kategori", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Virgülle ayırarak yaz…"};
 const API = C.api, g = i => document.getElementById(i);
 let kod = null, ben = null, zaman = null, yerel = null, yerelAcik = false, sonDurum = null;
 
@@ -266,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
   g('ad').value = localStorage.getItem('circle_ad') || '';
   g('yeni').hidden = false; g('yeni').textContent = C.yeniEtiket;
   g('alan').placeholder = C.yazEtiket;
-  if(C.odaBaslik) g('odaBaslik').textContent = C.odaBaslik;
+  if(C.havuz && C.havuz.length) g('serbest').hidden = false;
   g('yeni').onclick = () => kod ? yeniSoru() : yerelBas();
   g('kapat').onclick = async () => { if(kod){ await api('/oda/'+kod+'/kapat', {id:ben}); tazele(); }
                                      else { yerel = null; yerelCiz(); } };

@@ -56,6 +56,7 @@ input,textarea{width:100%;padding:15px;border-radius:12px;border:1px solid rgba(
 .gercek{color:#7BE3A0}
 .puanli{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .sayac{font-size:52px;font-weight:650;text-align:center;line-height:1.1}
+.ayrac{margin:34px 0 22px;border-top:1px solid rgba(246,241,228,.12)}
 </style><a class="home" href="index.html">&larr; Circle</a><div class="tag">TAHMİN</div><h1>Sayı bahsi</h1><p class="lede">Soru açılır, herkes bir tahmin yazar. Tahminler küçükten büyüğe sıralı açılır, bahisler konur, sonra doğru cevap görünür.</p>
 <div id="soruSar" class="sar" hidden>
   <div class="kutu"><div class="soru" id="soruMetin"></div></div>
@@ -64,16 +65,16 @@ input,textarea{width:100%;padding:15px;border-radius:12px;border:1px solid rgba(
 <div id="dogruKutu" class="kutu" hidden style="border-color:rgba(123,227,160,.4)">
   <div class="cn">DOĞRU CEVAP</div><div class="soru gercek" id="dogruMetin"></div></div>
 <button class="pick" id="yeni" hidden></button>
+<p class="lede" id="serbest" hidden style="font-size:13px;margin-top:10px">Soru açmak zorunda
+değilsiniz, kendi sorularınızla da oynayabilirsiniz.</p>
 <div id="sureAlan" hidden>
   <div class="kutu"><div class="sayac" id="sayac">60</div></div>
   <button class="pick ikincil" id="sureBtn">Süreyi başlat</button>
 </div>
 
 <div id="giris">
-  <h2 id="odaBaslik">HERKES KENDİ TELEFONUNDAN</h2>
-  <p class="lede" style="font-size:13px;margin-top:8px">Bir kişi oda kurar, diğerleri kodu girer.
-  Yazdıklarınız aynı anda açılır. Kağıt kalemle oynayacaksanız bu kısma hiç girmeyin.</p>
-  <input id="ad" placeholder="Adın" maxlength="18" style="margin-top:14px">
+  <div class="ayrac"></div>
+  <input id="ad" placeholder="Adın" maxlength="18">
   <button class="pick" id="kur">Oda kur</button>
   <div class="satir" style="margin-top:10px">
     <input id="kodgir" placeholder="ODA KODU" maxlength="4" style="text-transform:uppercase">
@@ -102,7 +103,7 @@ input,textarea{width:100%;padding:15px;border-radius:12px;border:1px solid rgba(
   <h2>PUANLAR</h2><ul id="puanlar"></ul>
   <button class="pick ikincil" id="cik" style="margin-top:22px">Odadan çık</button>
 </div>
-<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "sayi-bahsi", "tip": "cift", "havuz": [["İnsan vücudunda kaç kemik vardır?", "206"], ["Türkiye'de kaç il vardır?", "81"], ["Satranç tahtasında kaç kare vardır?", "64"], ["Bir piyanoda kaç tuş vardır?", "88"], ["Bir yetişkinde kaç diş bulunur?", "32"], ["Türk alfabesinde kaç harf vardır?", "29"], ["Bir iskambil destesinde kaç kart vardır?", "52"], ["Everest kaç metredir?", "8.849"], ["Maraton kaç kilometredir?", "42,195"], ["Ay'a kaç insan ayak bastı?", "12"], ["Rubik küpünün yüzeyinde kaç küçük kare vardır?", "54"], ["Basketbol potası kaç metre yüksektedir?", "3,05"], ["Bir günde kaç saniye vardır?", "86.400"], ["Nil Nehri yaklaşık kaç kilometredir?", "6.650"], ["Birleşmiş Milletler'in kaç üyesi vardır?", "193"], ["Dünya'nın çapı yaklaşık kaç kilometredir?", "12.742"], ["Titanik hangi yıl battı?", "1912"], ["Bir futbol sahasında kaç oyuncu bulunur, iki takım toplam?", "22"], ["İnsan kalbi dakikada ortalama kaç kez atar?", "70"], ["Bir oktavda kaç beyaz tuş vardır?", "7"], ["Ayasofya hangi yüzyılda yapıldı?", "6."], ["Bir zarın karşılıklı yüzlerinin toplamı kaçtır?", "7"], ["Güneş ışığı Dünya'ya kaç dakikada ulaşır?", "8"], ["Bir insanın vücudunun yüzde kaçı sudur?", "60"], ["Olimpiyat bayrağında kaç halka vardır?", "5"], ["Bir asırda kaç on yıl vardır?", "10"], ["Kediler günde ortalama kaç saat uyur?", "15"], ["Bir salyangozun kaç dişi olabilir?", "binlerce"], ["Pi sayısının ilk üç basamağı nedir?", "3,14"], ["Türkiye kaç ülkeyle kara sınırı paylaşır?", "8"]], "sabit": "", "dagit": null, "anonim": false, "ekle": false, "sayisal": true, "grupla": false, "sure": null, "yeniEtiket": "Soru aç", "tekrarEtiket": "Yeni soru", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Tahminin…", "odaBaslik": null};
+<script>const C={"api": "https://circle-oda.oguber-90.workers.dev", "slug": "sayi-bahsi", "tip": "cift", "havuz": [["İnsan vücudunda kaç kemik vardır?", "206"], ["Türkiye'de kaç il vardır?", "81"], ["Satranç tahtasında kaç kare vardır?", "64"], ["Bir piyanoda kaç tuş vardır?", "88"], ["Bir yetişkinde kaç diş bulunur?", "32"], ["Türk alfabesinde kaç harf vardır?", "29"], ["Bir iskambil destesinde kaç kart vardır?", "52"], ["Everest kaç metredir?", "8.849"], ["Maraton kaç kilometredir?", "42,195"], ["Ay'a kaç insan ayak bastı?", "12"], ["Rubik küpünün yüzeyinde kaç küçük kare vardır?", "54"], ["Basketbol potası kaç metre yüksektedir?", "3,05"], ["Bir günde kaç saniye vardır?", "86.400"], ["Nil Nehri yaklaşık kaç kilometredir?", "6.650"], ["Birleşmiş Milletler'in kaç üyesi vardır?", "193"], ["Dünya'nın çapı yaklaşık kaç kilometredir?", "12.742"], ["Titanik hangi yıl battı?", "1912"], ["Bir futbol sahasında kaç oyuncu bulunur, iki takım toplam?", "22"], ["İnsan kalbi dakikada ortalama kaç kez atar?", "70"], ["Bir oktavda kaç beyaz tuş vardır?", "7"], ["Ayasofya hangi yüzyılda yapıldı?", "6."], ["Bir zarın karşılıklı yüzlerinin toplamı kaçtır?", "7"], ["Güneş ışığı Dünya'ya kaç dakikada ulaşır?", "8"], ["Bir insanın vücudunun yüzde kaçı sudur?", "60"], ["Olimpiyat bayrağında kaç halka vardır?", "5"], ["Bir asırda kaç on yıl vardır?", "10"], ["Kediler günde ortalama kaç saat uyur?", "15"], ["Bir salyangozun kaç dişi olabilir?", "binlerce"], ["Pi sayısının ilk üç basamağı nedir?", "3,14"], ["Türkiye kaç ülkeyle kara sınırı paylaşır?", "8"]], "sabit": "", "dagit": null, "anonim": false, "ekle": false, "sayisal": true, "grupla": false, "sure": null, "yeniEtiket": "Soru aç", "tekrarEtiket": "Yeni soru", "cevapEtiket": "Doğru cevabı göster", "yazEtiket": "Tahminin…"};
 const API = C.api, g = i => document.getElementById(i);
 let kod = null, ben = null, zaman = null, yerel = null, yerelAcik = false, sonDurum = null;
 
@@ -266,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
   g('ad').value = localStorage.getItem('circle_ad') || '';
   g('yeni').hidden = false; g('yeni').textContent = C.yeniEtiket;
   g('alan').placeholder = C.yazEtiket;
-  if(C.odaBaslik) g('odaBaslik').textContent = C.odaBaslik;
+  if(C.havuz && C.havuz.length) g('serbest').hidden = false;
   g('yeni').onclick = () => kod ? yeniSoru() : yerelBas();
   g('kapat').onclick = async () => { if(kod){ await api('/oda/'+kod+'/kapat', {id:ben}); tazele(); }
                                      else { yerel = null; yerelCiz(); } };
