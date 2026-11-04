@@ -47,6 +47,8 @@ input{width:100%;padding:15px;border-radius:12px;border:1px solid rgba(246,241,2
        font-size:15px;text-align:center}
 .rolet.kirmizi{background:rgba(192,57,43,.22);border:1px solid #C0392B;color:#FF9B8F}
 .rolet.yesil{background:rgba(44,123,182,.18);border:1px solid #2C7BB6;color:#9CC9E8}
+.rolet.kapali{background:rgba(246,241,228,.06);border:1px solid rgba(246,241,228,.2);color:inherit;opacity:.55}
+.rolet{cursor:pointer;user-select:none}
 .ark{margin-top:8px;font-size:13px;text-align:center;opacity:.8}
 .fazbar{display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;gap:10px}
 .fazbar .f{font-size:12px;letter-spacing:.2em;font-weight:650;opacity:.75}
@@ -110,9 +112,11 @@ function ciz(d){
   const faz = d.faz==='gece' ? 'GECE' : (d.faz==='gunduz' ? 'GÜNDÜZ' : 'BİTTİ');
   g('faz').textContent = faz + (d.faz!=='bitti' ? ' · ' + d.tur + '. tur' : '');
   g('mesaj').textContent = d.mesaj || '';
-  g('rol').textContent = d.rol === 'vampir' ? 'SEN VAMPİRSİN' : 'SEN KÖYLÜSÜN';
-  g('rol').className = 'rolet ' + (d.rol==='vampir' ? 'kirmizi' : 'yesil');
-  g('arkadas').hidden = !(d.rol==='vampir' && d.arkadaslar.length);
+  const gizli = g('rol').dataset.gizli === '1';
+  g('rol').textContent = gizli ? 'ROLÜNÜ GÖSTER'
+    : (d.rol === 'vampir' ? 'SEN VAMPİRSİN' : 'SEN KÖYLÜSÜN');
+  g('rol').className = 'rolet ' + (gizli ? 'kapali' : (d.rol==='vampir' ? 'kirmizi' : 'yesil'));
+  g('arkadas').hidden = gizli || !(d.rol==='vampir' && d.arkadaslar.length);
   if(d.arkadaslar.length) g('arkadas').textContent = 'Diğer vampir' +
     (d.arkadaslar.length>1?'ler':'') + ': ' + d.arkadaslar.join(', ');
   g('sayac').hidden = d.kalanSn === null;
@@ -139,6 +143,8 @@ function ciz(d){
 document.addEventListener('DOMContentLoaded',()=>{
   g('ad').value = localStorage.getItem('circle_ad') || '';
   g('kur').onclick=kur; g('katil').onclick=katil; g('cik').onclick=cik;
+  g('rol').onclick=()=>{ const r=g('rol');
+    r.dataset.gizli = r.dataset.gizli === '1' ? '0' : '1'; if(durum) ciz(durum); };
   g('baslat').onclick=async()=>{ await api('/oda/'+kod+'/vampir',{id:ben}); tazele(); };
   g('yeniden').onclick=async()=>{ await api('/oda/'+kod+'/vampir',{id:ben}); tazele(); };
   g('oylar').onclick=async e=>{ const b=e.target.closest('[data-h]'); if(!b||b.disabled) return;
