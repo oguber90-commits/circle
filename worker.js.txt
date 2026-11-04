@@ -1,0 +1,199 @@
+// Circle — ortak oda sunucusu (Cloudflare Worker + D1)
+// Bağlama: D1 veritabanı, değişken adı DB
+// Oyuncular ve cevaplar ayrı tablolarda: aynı anda katılan ya da yazan kimse birbirini ezmez.
+
+const HARFLER = 'ABCDEFGHJKLMNPRSTUVYZ';
+const kodUret = () => Array.from({length: 4}, () => HARFLER[Math.floor(Math.random() * HARFLER.length)]).join('');
+
+const BASLIK = {
+  'content-type': 'application/json',
+  'access-control-allow-origin': '*',
+  'access-control-allow-headers': 'content-type',
+  'access-control-allow-methods': 'GET,POST,OPTIONS',
+};
+const json = (v, s = 200) => new Response(JSON.stringify(v), {status: s, headers: BASLIK});
+const karistir = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(p => p[1]);
+const kirp = (v, n) => String(v == null ? '' : v).slice(0, n);
+
+async function hazirla(env) {
+  await env.DB.batch([
+    env.DB.prepare('CREATE TABLE IF NOT EXISTS odalar (kod TEXT PRIMARY KEY, durum TEXT NOT NULL, guncel INTEGER NOT NULL)'),
+    env.DB.prepare('CREATE TABLE IF NOT EXISTS oyuncular (kod TEXT NOT NULL, id TEXT PRIMARY KEY, ad TEXT NOT NULL, sira INTEGER NOT NULL, puan INTEGER NOT NULL DEFAULT 0, gizli TEXT)'),
+    env.DB.prepare('CREATE TABLE IF NOT EXISTS cevaplar (kod TEXT NOT NULL, tur INTEGER NOT NULL, id TEXT NOT NULL, metin TEXT NOT NULL, sira INTEGER NOT NULL, PRIMARY KEY (kod, tur, id))'),
+  ]);
+}
+
+const bosDurum = () => ({acik: false, cevapAcik: false, soru: null, tur: 1, gercekYer: null, karisik: []});
+
+async function odaOku(env, kod) {
+  const r = await env.DB.prepare('SELECT durum FROM odalar WHERE kod = ?').bind(kod).first();
+  return r ? JSON.parse(r.durum) : null;
+}
+async function odaYaz(env, kod, d) {
+  const s = JSON.stringify(d), t = Date.now();
+  await env.DB.prepare(
+    'INSERT INTO odalar (kod, durum, guncel) VALUES (?, ?, ?) ON CONFLICT(kod) DO UPDATE SET durum = ?, guncel = ?'
+  ).bind(kod, s, t, s, t).run();
+}
+async function oyuncuListe(env, kod) {
+  const r = await env.DB.prepare(
+    'SELECT id, ad, puan, gizli FROM oyuncular WHERE kod = ? ORDER BY sira ASC'
+  ).bind(kod).all();
+  return r.results || [];
+}
+async function cevapListe(env, kod, tur) {
+  const r = await env.DB.prepare(
+    'SELECT id, metin FROM cevaplar WHERE kod = ? AND tur = ? ORDER BY sira ASC'
+  ).bind(kod, tur).all();
+  return r.results || [];
+}
+
+async function gorunum(env, kod, d, id) {
+  const oy = await oyuncuListe(env, kod);
+  const cv = await cevapListe(env, kod, d.tur);
+  const ben = oy.find(o => o.id === id) || null;
+  const adlar = new Map(oy.map(o => [o.id, o.ad]));
+  const yazdi = new Map(cv.map(c => [c.id, c.metin]));
+
+  let cevaplar = [];
+  if (d.acik) {
+    const duzen = (d.karisik || []).filter(x => yazdi.has(x));
+    for (const c of cv) if (!duzen.includes(c.id)) duzen.push(c.id);
+    cevaplar = duzen.map(x => ({
+      ad: d.soru && d.soru.anonim ? '' : (adlar.get(x) || ''),
+      metin: yazdi.get(x),
+    }));
+    if (d.soru && d.soru.ekle && d.soru.cevap) {
+      const yer = d.gercekYer == null ? cevaplar.length : Math.min(d.gercekYer, cevaplar.length);
+      cevaplar.splice(yer, 0, {ad: '', metin: d.soru.cevap, gercek: !!d.cevapAcik});
+    }
+  }
+  return {
+    acik: !!d.acik,
+    dogruAcik: !!d.cevapAcik,
+    kisi: oy.length,
+    yazan: cv.length,
+    oyuncular: oy.map(o => ({ad: o.ad, puan: o.puan || 0})),
+    sahip: !!ben && oy.length > 0 && oy[0].id === id,
+    yazdim: !!ben && yazdi.has(ben.id),
+    soru: d.soru ? d.soru.metin : null,
+    cevap: d.cevapAcik && d.soru ? (d.soru.cevap || null) : null,
+    gizli: ben ? ben.gizli || null : null,
+    tur: d.tur,
+    cevaplar,
+  };
+}
+
+export default {
+  async fetch(istek, env) {
+    const url = new URL(istek.url);
+    const y = url.pathname;
+
+    if (istek.method === 'OPTIONS') return new Response(null, {status: 204, headers: BASLIK});
+    if (!y.startsWith('/api/')) {
+      return new Response(
+        '<!doctype html><meta charset="utf-8"><title>Circle</title>' +
+        '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+        '<body style="background:#111A24;color:#F6F1E4;font:16px/1.6 system-ui;padding:40px 22px;max-width:540px;margin:0 auto">' +
+        '<p style="font-size:11px;letter-spacing:.2em;color:#1C8B9C;font-weight:600">CIRCLE</p>' +
+        '<h1 style="font-size:30px;margin-top:10px">Oda sunucusu</h1>' +
+        '<p style="opacity:.7;margin-top:14px">Odalar oyun sayfalarının içinden açılır. ' +
+        'Kartın üzerindeki kodu okutun.</p>' +
+        '<p style="margin-top:20px"><a style="color:#1C8B9C" href="https://oguber90-commits.github.io/circle/">Oyun sayfaları</a></p>',
+        {headers: {'content-type': 'text/html; charset=utf-8'}});
+    }
+
+    try {
+      await hazirla(env);
+      const p = y.replace('/api/', '').split('/');
+      const g = istek.method === 'POST' ? await istek.json().catch(() => ({})) : {};
+
+      if (p[0] === 'oda' && p.length === 1 && istek.method === 'POST') {
+        let kod;
+        for (let i = 0; i < 8; i++) { kod = kodUret(); if (!(await odaOku(env, kod))) break; }
+        const id = crypto.randomUUID();
+        await odaYaz(env, kod, bosDurum());
+        await env.DB.prepare('INSERT INTO oyuncular (kod, id, ad, sira, puan) VALUES (?, ?, ?, ?, 0)')
+          .bind(kod, id, kirp(g.ad || 'Biri', 18), Date.now()).run();
+        return json({kod, id});
+      }
+
+      const kod = (p[1] || '').toUpperCase();
+      const d = await odaOku(env, kod);
+      if (!d) return json({hata: 'oda yok'}, 404);
+
+      if (p.length === 2 && istek.method === 'GET') {
+        return json(await gorunum(env, kod, d, url.searchParams.get('id') || ''));
+      }
+      if (istek.method !== 'POST') return json({hata: 'yok'}, 405);
+
+      if (p[2] === 'katil') {
+        const ad = kirp(g.ad || 'Biri', 18);
+        const v = await env.DB.prepare('SELECT id FROM oyuncular WHERE kod = ? AND lower(ad) = lower(?)')
+          .bind(kod, ad).first();
+        if (v) return json({id: v.id});
+        const id = crypto.randomUUID();
+        await env.DB.prepare('INSERT INTO oyuncular (kod, id, ad, sira, puan) VALUES (?, ?, ?, ?, 0)')
+          .bind(kod, id, ad, Date.now()).run();
+        return json({id});
+      }
+
+      const ben = await env.DB.prepare('SELECT id, ad FROM oyuncular WHERE id = ? AND kod = ?')
+        .bind(kirp(g.id, 64), kod).first();
+      if (!ben) return json({hata: 'odada degilsin'}, 403);
+
+      if (p[2] === 'cevap') {
+        await env.DB.prepare(
+          'INSERT INTO cevaplar (kod, tur, id, metin, sira) VALUES (?, ?, ?, ?, ?) ' +
+          'ON CONFLICT(kod, tur, id) DO UPDATE SET metin = ?'
+        ).bind(kod, d.tur, ben.id, kirp(g.metin, 500), Date.now(), kirp(g.metin, 500)).run();
+
+      } else if (p[2] === 'soru' || p[2] === 'tur' || p[2] === 'kapat' || p[2] === 'dagit') {
+        const sonraki = d.tur + 1;
+        if (p[2] === 'soru') {
+          d.soru = {metin: kirp(g.metin, 600), cevap: kirp(g.cevap, 600),
+                    anonim: !!g.anonim, ekle: !!g.ekle};
+        } else if (p[2] === 'dagit') {
+          const havuz = karistir((Array.isArray(g.gorevler) ? g.gorevler : []).slice());
+          const oy = karistir((await oyuncuListe(env, kod)).map(o => o.id));
+          const islem = [env.DB.prepare('UPDATE oyuncular SET gizli = NULL WHERE kod = ?').bind(kod)];
+          for (let i = 0; i < oy.length; i += 2) {
+            const gorev = kirp(havuz.length ? havuz[Math.floor(i / 2) % havuz.length] : '', 300);
+            islem.push(env.DB.prepare('UPDATE oyuncular SET gizli = ? WHERE id = ?').bind(gorev, oy[i]));
+            if (oy[i + 1]) islem.push(env.DB.prepare('UPDATE oyuncular SET gizli = ? WHERE id = ?').bind(gorev, oy[i + 1]));
+          }
+          await env.DB.batch(islem);
+          d.soru = {metin: kirp(g.metin, 600), cevap: '', anonim: false, ekle: false};
+        } else {
+          d.soru = p[2] === 'kapat' ? null : d.soru;
+          if (p[2] === 'kapat') await env.DB.prepare('UPDATE oyuncular SET gizli = NULL WHERE kod = ?').bind(kod).run();
+        }
+        d.tur = sonraki; d.acik = false; d.cevapAcik = false; d.karisik = []; d.gercekYer = null;
+        await odaYaz(env, kod, d);
+
+      } else if (p[2] === 'ac' || p[2] === 'cevapac') {
+        const cv = await cevapListe(env, kod, d.tur);
+        if (!(d.karisik || []).length) d.karisik = karistir(cv.map(c => c.id));
+        if (d.gercekYer == null && d.soru && d.soru.ekle) {
+          d.gercekYer = Math.floor(Math.random() * (d.karisik.length + 1));
+        }
+        d.acik = true;
+        if (p[2] === 'cevapac') d.cevapAcik = true;
+        await odaYaz(env, kod, d);
+
+      } else if (p[2] === 'puan') {
+        const oy = await oyuncuListe(env, kod);
+        const hedef = oy[Number(g.sira)];
+        if (hedef) {
+          await env.DB.prepare('UPDATE oyuncular SET puan = max(0, puan + ?) WHERE id = ?')
+            .bind(Number(g.delta) || 0, hedef.id).run();
+        }
+      } else {
+        return json({hata: 'yok'}, 404);
+      }
+      return json(await gorunum(env, kod, d, ben.id));
+    } catch (e) {
+      return json({hata: String((e && e.message) || e)}, 500);
+    }
+  }
+};
