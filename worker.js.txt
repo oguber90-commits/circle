@@ -87,6 +87,87 @@ async function gorunum(env, kod, d, id) {
   };
 }
 
+
+/* ---------- Köylü ve vampir ---------- */
+const GUNDUZ_SN = 180;
+
+function vampirSayisi(n) { return n >= 11 ? 3 : (n >= 7 ? 2 : 1); }
+
+function vampirGorunum(d, oy, id) {
+  const o = d.oyun;
+  const adi = new Map(oy.map(x => [x.id, x.ad]));
+  const yasayan = o.yasayan.filter(x => adi.has(x));
+  const benVampir = o.roller[id] === 'vampir';
+  const benYasiyor = yasayan.includes(id);
+  const oyVerenler = Object.keys(o.oy || {});
+  const gerekli = o.faz === 'gece'
+    ? yasayan.filter(x => o.roller[x] === 'vampir')
+    : yasayan;
+  return {
+    oyunVar: true,
+    faz: o.faz,
+    tur: o.tur,
+    sonuc: o.sonuc || null,
+    rol: o.roller[id] || null,
+    yasiyorum: benYasiyor,
+    arkadaslar: benVampir
+      ? yasayan.filter(x => x !== id && o.roller[x] === 'vampir').map(x => adi.get(x))
+      : [],
+    yasayan: yasayan.map(x => ({id: x, ad: adi.get(x), oyVerdi: oyVerenler.includes(x)})),
+    olenler: (o.olum || []).map(x => ({ad: adi.get(x.id) || '', faz: x.faz, rol: x.rol})),
+    oyum: (o.oy || {})[id] || null,
+    oySayisi: oyVerenler.length,
+    gereken: gerekli.length,
+    kalanSn: o.faz === 'gunduz' && o.bitis ? Math.max(0, Math.round((o.bitis - Date.now()) / 1000)) : null,
+    mesaj: o.mesaj || '',
+    sahip: oy.length > 0 && oy[0].id === id,
+  };
+}
+
+function cozumle(d, oy) {
+  const o = d.oyun;
+  const adi = new Map(oy.map(x => [x.id, x.ad]));
+  const yasayan = o.yasayan.filter(x => adi.has(x));
+  const oylar = o.oy || {};
+  let olen = null;
+
+  if (o.faz === 'gece') {
+    const vamp = yasayan.filter(x => o.roller[x] === 'vampir');
+    const verenler = vamp.filter(x => oylar[x]);
+    if (!verenler.length) return false;
+    const secen = verenler[Math.floor(Math.random() * verenler.length)];
+    olen = oylar[secen];
+    o.mesaj = olen ? (adi.get(olen) || 'Biri') + ' gece öldürüldü.' : 'Gece kimse ölmedi.';
+  } else {
+    const sayim = {};
+    Object.values(oylar).forEach(h => { if (h) sayim[h] = (sayim[h] || 0) + 1; });
+    const en = Math.max(0, ...Object.values(sayim));
+    const basta = Object.keys(sayim).filter(k => sayim[k] === en);
+    if (en === 0 || basta.length !== 1) {
+      o.mesaj = 'Oylar eşit, kimse idam edilmedi.';
+    } else {
+      olen = basta[0];
+      o.mesaj = (adi.get(olen) || 'Biri') + ' idam edildi. Rolü: ' +
+                (o.roller[olen] === 'vampir' ? 'vampir' : 'köylü') + '.';
+    }
+  }
+
+  if (olen) {
+    o.yasayan = o.yasayan.filter(x => x !== olen);
+    o.olum.push({id: olen, faz: o.faz, rol: o.roller[olen], tur: o.tur});
+  }
+  o.oy = {};
+
+  const kalan = o.yasayan.filter(x => adi.has(x));
+  const kalanVamp = kalan.filter(x => o.roller[x] === 'vampir').length;
+  const kalanKoy = kalan.length - kalanVamp;
+  if (kalanVamp === 0) { o.faz = 'bitti'; o.sonuc = 'koylu'; o.mesaj += ' Köylüler kazandı.'; }
+  else if (kalanVamp >= kalanKoy) { o.faz = 'bitti'; o.sonuc = 'vampir'; o.mesaj += ' Vampirler kazandı.'; }
+  else if (o.faz === 'gece') { o.faz = 'gunduz'; o.bitis = Date.now() + GUNDUZ_SN * 1000; }
+  else { o.faz = 'gece'; o.tur += 1; o.bitis = null; }
+  return true;
+}
+
 export default {
   async fetch(istek, env) {
     const url = new URL(istek.url);
@@ -223,6 +304,45 @@ export default {
         satir[ix] = kirp(bos[Math.floor(Math.random() * bos.length)], 300);
         await env.DB.prepare('UPDATE oyuncular SET gizli = ?, hak = 0 WHERE id = ?')
           .bind(satir.join('\n'), ben.id).run();
+
+      } else if (p[2] === 'vampir') {
+        const oy = await oyuncuListe(env, kod);
+        const sira = karistir(oy.map(o => o.id));
+        const vs = vampirSayisi(sira.length);
+        const roller = {};
+        sira.forEach((x, i) => roller[x] = i < vs ? 'vampir' : 'koylu');
+        d.oyun = {faz: 'gece', tur: 1, yasayan: oy.map(o => o.id), roller,
+                  oy: {}, olum: [], bitis: null, sonuc: null,
+                  mesaj: 'Gece. Vampirler kurbanını seçiyor.'};
+        d.soru = null; d.acik = false; d.cevapAcik = false;
+        await odaYaz(env, kod, d);
+        return json(vampirGorunum(d, oy, ben.id));
+
+      } else if (p[2] === 'voy') {
+        if (!d.oyun || d.oyun.faz === 'bitti') return json({hata: 'oyun yok'}, 409);
+        const oy = await oyuncuListe(env, kod);
+        const o = d.oyun;
+        const adi = new Set(oy.map(x => x.id));
+        const yasayan = o.yasayan.filter(x => adi.has(x));
+        const yetkili = o.faz === 'gece' ? (o.roller[ben.id] === 'vampir') : true;
+        if (!yasayan.includes(ben.id) || !yetkili) return json({hata: 'oy veremezsin'}, 403);
+        o.oy = o.oy || {};
+        o.oy[ben.id] = String(g.hedef || '');
+        const gerekli = o.faz === 'gece'
+          ? yasayan.filter(x => o.roller[x] === 'vampir')
+          : yasayan;
+        if (gerekli.every(x => o.oy[x])) cozumle(d, oy);
+        await odaYaz(env, kod, d);
+        return json(vampirGorunum(d, oy, ben.id));
+
+      } else if (p[2] === 'vdurum') {
+        if (!d.oyun) return json({oyunVar: false});
+        const oy = await oyuncuListe(env, kod);
+        if (d.oyun.faz === 'gunduz' && d.oyun.bitis && Date.now() > d.oyun.bitis) {
+          cozumle(d, oy);
+          await odaYaz(env, kod, d);
+        }
+        return json(vampirGorunum(d, oy, ben.id));
 
       } else if (p[2] === 'puan') {
         const oy = await oyuncuListe(env, kod);
