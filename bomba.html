@@ -33,7 +33,7 @@ b{font-weight:650;color:#fff}
 .cardlink .t{font-weight:600;font-size:17px}
 .cardlink .s{font-size:12px;letter-spacing:.16em;margin-top:5px;opacity:.55}
 </style>
-<body style="--acc:#E0632F"><a class="home" href="index.html">&larr; Circle</a><div class="tag">Beceri</div><h1>Bomba sayacı</h1><p class="lede">Süre 10 ile 25 saniye arası, rastgele. Her basış bir saniye ekler, kimse ne kadar kaldığını bilmiyor. Heceyi içeren bir kelime söyleyip telefonu yanındakine ver.</p><div id="out" style="display:block;text-align:center;padding:36px 20px"><div style="font-size:11px;letter-spacing:.2em;opacity:.5">Hece</div><div id="hece" style="font-size:54px;font-weight:650;line-height:1.1;margin-top:6px">···</div><div id="tur" style="margin-top:8px;font-size:13px;letter-spacing:.18em;opacity:.5">&ndash; / 3</div><div id="durum" style="margin-top:14px;font-size:13px;letter-spacing:.14em;opacity:.6">Başlamak için Sonraki</div></div><button class="pick" id="btn">Sonraki</button>
+<body style="--acc:#E0632F"><a class="home" href="index.html">&larr; Circle</a><div class="tag">Beceri</div><h1>Bomba sayacı</h1><p class="lede">Süre 10 ile 25 saniye arası, rastgele. Her basış bir saniye ekler, kimse ne kadar kaldığını bilmiyor. Heceyi içeren bir kelime söyleyip telefonu yanındakine ver.</p><div id="out" style="display:block;text-align:center;padding:36px 20px"><div style="font-size:11px;letter-spacing:.2em;opacity:.5">Hece</div><div id="hece" style="font-size:54px;font-weight:650;line-height:1.1;margin-top:6px">···</div><div id="tur" style="margin-top:8px;font-size:13px;letter-spacing:.18em;opacity:.5">&ndash; / 3</div><div id="durum" style="margin-top:14px;font-size:13px;letter-spacing:.14em;opacity:.6">Başlamak için Sonraki</div></div><style>#btn.ikinci{background:#F0D9A8}.yeniden{width:100%;margin-top:10px;padding:14px;border-radius:14px;cursor:pointer;border:1px solid rgba(246,241,228,.22);background:rgba(246,241,228,.07);color:inherit;font:inherit;font-weight:600}</style><button class="pick" id="btn">Sonraki</button><button class="yeniden" id="sifir">Baştan başla</button>
 <script>
 const HECE2=["al","ar","at","ak","an","as","el","en","er","es","il","ir","in","is","ol","or","on","ul","un","ur","ka","ke","ki","ko","ku","ba","be","bi","bo","bu","da","de","di","do","du","sa","se","si","so","su","ta","te","ti","to","tu","ma","me","mi","mo","mu","ya","ye","yi","yo","yu","la","le","li","lo","lu","ra","re","ri","ro","ru","ça","çe","şa","şe","ga","ge","na","ne","pa","pe"];
 const HECE3=["kal","ara","gel","san","bil","dur","yaz","kar","tek","sor","bak","gör","sev","can","dil","kap","top","yol","göz","baş","taş","son","bir","dağ","yan","kum","ses","ter","sar","dar","del","ger","kır","kul","mal","nar","oda","pas","sal","tur"];
@@ -58,7 +58,14 @@ function bas(){
  d.getElementById("hece").textContent=aktifHece;
  d.getElementById("tur").textContent=((elSayac-1)%3+1)+" / 3";
  if(!calisiyor){sayac();d.getElementById("durum").textContent="Kelimeyi söyle, Sonraki'ye bas, telefonu ver";}
- else{bitis+=1000;ses(520,.05);}}
-d.addEventListener("DOMContentLoaded",()=>{d.getElementById("btn").onclick=bas;});
+ else{bitis+=1000;ses(520,.05);}
+ d.getElementById("btn").classList.toggle("ikinci");}
+function sifirla(){clearInterval(t);calisiyor=false;elSayac=0;aktifHece="";
+ d.getElementById("hece").textContent="···";
+ d.getElementById("tur").textContent="– / 3";
+ d.getElementById("durum").textContent="Başlamak için Sonraki";
+ d.getElementById("btn").classList.remove("ikinci");}
+d.addEventListener("DOMContentLoaded",()=>{
+ d.getElementById("btn").onclick=bas; d.getElementById("sifir").onclick=sifirla;});
 </script>
 <div class="foot">Circle</div></body></html>
